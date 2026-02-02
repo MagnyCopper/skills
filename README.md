@@ -1,12 +1,12 @@
 # skills
-AI Agent Skills
+AI Agent 技能仓库
 
-## Available Skills
+## 可用技能
 
-- `homepage-info-extractor/`: Extracts verbatim fields from an official website homepage and relevant subpages, then writes results to `results/<skill-name>+YYYYMMDD.md`.
+- `homepage-info-extractor/`：从官网首页与必要子页面原文提取指定字段，并写入 `results/<skill-name>+YYYYMMDD.md`。
 
-## Output Conventions
+## 输出约定
 
-- Results are stored in `results/`.
-- Date format is `YYYYMMDD`.
-- If a field returns multiple records (e.g., executives list), use a separate table below the main table and note "see table below" in the main row.
+- 结果存放在 `results/`。
+- 日期格式为 `YYYYMMDD`。
+- 若字段包含多条记录（如高管列表），在主表下方新增独立表格，并在主表对应行注明“见下方表格”。
