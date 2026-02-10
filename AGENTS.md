@@ -1,32 +1,55 @@
 # Repository Guidelines
 
-## 项目结构与模块组织
-- 根目录文档：`README.md`。
-- 技能以目录形式存放在根目录（当前为 `homepage-info-extractor/`）。
-- 每个技能目录包含 `SKILL.md` 以及资源文件（例如 `homepage-info-extractor/assets/templates/template-table.md`）。
-- 生成结果统一写入 `results/`，命名规则为 `results/<skill-name>+YYYYMMDD.md`。
+## Project Structure & Module Organization
+This repository is organized around **skills**, each stored as a top-level directory.
 
-## 构建、测试与开发命令
-- 本仓库未定义构建或运行命令。
-- 日常查看可使用命令行工具，例如 `rg --files` 以列出文件。
+- `README.md`: repository overview.
+- `homepage-info-extractor/`: current skill implementation.
+- `homepage-info-extractor/SKILL.md`: canonical skill definition and workflow.
+- `homepage-info-extractor/assets/templates/template-table.md`: fixed output template for homepage extraction tasks.
+- `homepage-info-extractor/references/`: supporting reference material.
+- `results/`: generated outputs (create if missing), using `results/<skill-name>+YYYYMMDD.md`.
 
-## 编码风格与命名规范
-- 文档使用 Markdown，标题简洁清晰。
-- 默认使用 ASCII 字符。
-- 目录命名：技能目录使用 kebab-case（如 `homepage-info-extractor/`）。
-- 输出命名：`results/<skill-name>+YYYYMMDD.md`（示例：`results/homepage-info-extractor+20260202.md`）。
+Example output filename: `results/homepage-info-extractor+20260202.md`.
 
-## 测试指南
-- 未配置自动化测试框架。
-- 通过人工检查验证：Markdown 渲染、路径、标题与命名规则是否正确。
+## Build, Test, and Development Commands
+No build system or automated test runner is configured.
 
-## 提交与合并请求规范
-- 提交历史较少，未体现严格规范。建议使用简短、祈使句式的摘要（示例：“Add homepage info extractor skill”）。
-- 合并请求建议包含：
-  - 清晰的变更说明。
-  - 新增或更新的模板及其路径。
-  - 如影响结果生成，提供示例输出文件名。
+Use lightweight CLI checks during development:
 
-## Agent 专用说明
-- 技能必须在技能目录内以 `SKILL.md` 定义。
-- 若执行主页信息抽取，严格遵循技能规则：仅原文、记录来源 URL 与定位器、使用固定模板 `homepage-info-extractor/assets/templates/template-table.md`。
+- `rg --files`: list repository files quickly.
+- `rg "pattern" homepage-info-extractor/`: search skill content.
+- `ls results/`: verify generated artifacts and naming.
+
+## Coding Style & Naming Conventions
+- Write documentation in concise Markdown with clear headings.
+- Prefer ASCII by default.
+- Use **kebab-case** for skill directory names (e.g., `homepage-info-extractor/`).
+- Keep generated result names deterministic: `results/<skill-name>+YYYYMMDD.md`.
+- Avoid adding unrelated scaffolding (scripts, configs) unless required by a task.
+
+## Testing Guidelines
+There is no formal test framework. Validate changes by manual checks:
+
+- Markdown renders correctly.
+- Paths referenced in docs exist.
+- Output filenames match the required pattern.
+- Skill instructions remain internally consistent.
+
+For extraction tasks, verify fields are copied from source text exactly and traceable to source URL/locator.
+
+## Commit & Pull Request Guidelines
+Commit history is lightweight, so use short imperative commit messages, e.g.:
+
+- `Add homepage info extractor skill`
+- `Update extraction template wording`
+
+PRs should include:
+
+- What changed and why.
+- Affected file paths.
+- Example output filename when result generation behavior changes.
+
+## Agent-Specific Instructions
+- Define each skill inside its own directory with a `SKILL.md` file.
+- For homepage extraction, follow the `homepage-info-extractor` rules strictly: original text only, include source URL and locator, and use the fixed template at `homepage-info-extractor/assets/templates/template-table.md`.
