@@ -8,9 +8,9 @@
 - `homepage-info-extractor/SKILL.md`：技能定义与执行规范。
 - `homepage-info-extractor/assets/templates/template-table.md`：主页信息抽取固定模板。
 - `homepage-info-extractor/references/`：参考资料。
-- `results/`：结果输出目录（如不存在可创建），命名为 `results/<skill-name>+YYYYMMDD.md`。
+- `results/`：结果输出目录。产物放在 `results/<YYYYMMDD>/<skill-name>/` 下（如不存在可创建）。
 
-示例：`results/homepage-info-extractor+20260202.md`。
+示例：`results/20260202/homepage-info-extractor/example.com.md`。
 
 ## 构建、测试与开发命令
 仓库未配置构建系统或自动化测试。
@@ -25,7 +25,7 @@
 - 文档使用简洁 Markdown，标题清晰。
 - 默认使用 ASCII 字符。
 - 技能目录使用 **kebab-case**（如 `homepage-info-extractor/`）。
-- 输出文件命名固定：`results/<skill-name>+YYYYMMDD.md`。
+- 输出路径固定：`results/<YYYYMMDD>/<skill-name>/...`。
 - 非必要不新增无关脚手架或配置。
 
 ## 测试指南
@@ -33,7 +33,7 @@
 
 - Markdown 渲染正常。
 - 文档中的路径真实存在。
-- 输出文件名符合约定。
+- 输出路径符合约定。
 - 技能说明前后逻辑一致。
 
 对抽取任务，需确认字段为原文摘录，并可追溯到来源 URL 与定位器。
@@ -48,7 +48,7 @@ PR 建议包含：
 
 - 变更内容与目的。
 - 受影响文件路径。
-- 若影响产物生成，附示例输出文件名。
+- 若影响产物生成，附示例输出路径。
 
 ## Agent 专用说明
 - 每个技能必须在独立目录内定义 `SKILL.md`。

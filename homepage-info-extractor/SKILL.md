@@ -60,7 +60,7 @@ flowchart TD
 
 ## 输出与归档要求
 
-- **存储路径**：`<工程根目录>/results/`。
+- **存储路径**：`<工程根目录>/results/<YYYYMMDD>/homepage-info-extractor/`。
 - **命名规范**：`<目标官网域名>.md`。
 - **独立性**：一个官网一个文件。
 
