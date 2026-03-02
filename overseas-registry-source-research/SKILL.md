@@ -1,131 +1,214 @@
----
+﻿---
 name: overseas-registry-source-research
-description: 调研海外国家/地区官方工商数据源并设计可验证的数据下载方案。适用于需要联网搜索、Playwright页面验证、可行性测试脚本与标准化调研报告输出的场景。
+description: Use when researching overseas registry sources and producing a verifiable multi-source strategy with authority-level source selection and per-product MCP/download validation.
 ---
 
 # Overseas Registry Source Research
 
 ## Purpose
-针对指定国家/地区，系统调研工商数据披露渠道，设计并验证可执行的数据下载方案，输出可复核的调研报告与测试数据集。
+针对指定国家/地区，系统调研官方与关键第三方企业数据源，逐源完成可复现验证，并输出“数据源组合”下载方案。目标是同时优化：
+- 更新最即时
+- 数据量最大
+- 信息披露维度最全面
+
+本技能的本质目标是：以“企业（Company/Entity）”为统一主轴，整合多个 `Authority Source` 及其 `Data Product` 的披露字段，构建企业多维度信息视图（而非孤立的数据抓取清单）。
+
+## Source Hierarchy Standard (Required)
+本技能强制使用两层定义，避免概念混淆：
+- `Authority Source`（主数据源/机构级来源）
+  - 例：Companies House、税务局、统计局、证券监管机构、政府开放数据平台
+- `Data Product`（子数据产品/同机构下入口）
+  - 例：bulk basic snapshot、PSC snapshot、accounts daily、search web、public API
+
+规则：
+1. “数据源数量”优先按 `Authority Source` 统计。
+2. 同一机构下多个入口默认归为同一个 `Authority Source`。
+3. 逐项 MCP 实测、脚本下载、1000条测试的执行颗粒度按 `Data Product` 进行。
+4. 报告必须同时展示：
+   - `Authority Source` 汇总视图
+   - `Data Product` 执行视图
+5. 数据整合与评分必须以“企业主轴”进行：每个 `Data Product` 都要说明其如何映射到企业实体（例如 Company Number、注册号、名称+地址匹配）。
+
+## Enterprise-Centric Integration Rule (Required)
+所有分析、测试与结论必须围绕“企业维度整合”展开：
+1. 先定义企业主键策略（优先官方注册号；缺失时使用名称/地址/时间等辅助键）。
+2. 每个 `Data Product` 必须声明其在企业维度中的角色：
+   - `identity`（主体识别）
+   - `status`（状态与生命周期）
+   - `governance`（高管/股东/受益所有人）
+   - `financials`（财报/财务文档）
+   - `compliance_docs`（申报/可购买文档）
+3. 组合推荐必须回答：该组合如何在企业主轴上实现“更全维度覆盖”，而不是只比较下载便利性。
 
 ## Runtime Compatibility
-本技能需可在以下代理/CLI 环境中使用，且不依赖单一平台私有能力：
+可在以下代理/CLI 环境使用，且不依赖单一平台私有能力：
 - Codex
 - Claude Code
 - Gemini CLI
 - OpenCode
 
 ## Encoding Standard
-- 所有输入/输出文件统一使用 UTF-8 编码。
-- 结果中包含中文时，必须保证可读、无乱码（例如避免出现 `???` 或异常替换字符）。
-- 新增或修改文件时，默认保持 UTF-8（无 BOM）并与仓库 Markdown 风格一致。
+- 所有输入/输出文件统一使用 UTF-8。
+- 结果中包含中文时必须可读、无乱码。
+- 新增或修改文件默认保持 UTF-8（无 BOM）。
 
 ## Input
-- `country_or_region`：目标国家/地区名称（必填）。
-- `target_language`：报告语言，默认中文。
-- `template_path`：报告模板路径。默认使用 `overseas-registry-source-research/模版.md`。
-- `sample_size`：预下载规模，默认 `1000`。
-- `time_limit_or_budget`：可选，用于限制验证深度。
+- `country_or_region`：目标国家/地区名称（必填）
+- `target_language`：报告语言，默认中文
+- `template_path`：报告模板路径，默认 `overseas-registry-source-research/模版.md`
+- `sample_size`：每个数据产品的预下载规模，默认 `1000`
+- `time_limit_or_budget`：可选，用于限制验证深度
 
 ## Required Coverage Dimensions
-下载方案设计与可行性评估时，必须覆盖以下企业信息维度（按“可获取/部分可获取/不可获取”标注）：
-- 企业工商注册信息：名称、曾用名、多语言名称、注册编号、税号、办公地址、经营范围、所属行业、成立日期、注销日期、登记状态、法人/法定代表人。
-- 分支机构信息。
-- 高管/团队成员信息。
-- 股东/董事会成员信息。
-- 可购买文件（如企业档案、年报、章程、变更文件、证明文件等）：文件类型、获取方式、价格/计费方式、是否需登录或实名认证。
+下载方案设计与可行性评估时，必须覆盖以下维度并标注“可获取/部分可获取/不可获取”：
+- 企业工商注册信息：名称、曾用名、多语言名、注册号、税号、办公地址、经营范围、所属行业、成立日期、注销日期、登记状态、法人/法定代表人
+- 分支机构信息
+- 高管/团队成员信息
+- 股东/董事会成员信息
+- 可购买文件（企业档案、年报、章程、变更文件、证明文件等）：文件类型、获取方式、价格/计费、是否需要登录或实名
 
 ## Required Tools
-- 联网搜索能力（优先官方与权威来源）。
-- 浏览器自动化能力（优先 Playwright MCP；可替代为 Playwright/Puppeteer/Selenium）：用于页面入口定位、搜索链路验证、请求过程分析。
-- Python（必须）：用于可行性方案的预下载脚本实现。
+- 联网搜索（优先官方与权威来源）
+- 浏览器自动化（优先 Playwright MCP）
+- Python（必须，用于下载测试脚本实现）
 
 ## Tool Fallback Rules
-- 若当前环境无 Playwright MCP，允许使用等价浏览器自动化工具完成同等验证。
-- 若自动化工具均不可用，允许人工操作取证作为临时降级方案，但必须提供可复现证据（页面截图、操作步骤、关键请求说明）并在报告中标记 `自动化未验证`。
+- 若无 Playwright MCP，可使用等价自动化工具。
+- 若自动化工具不可用，可人工取证降级，但必须提供可复现证据，并在报告中标注 `自动化未验证`。
+
+## Source Discovery Standard (Required)
+先找机构级来源，再拆产品级入口：
+
+### Step A: Authority Source Discovery
+- 必须先列出候选 `Authority Source`，并按优先级筛选：
+  - 公司注册/工商主管机构
+  - 税务主管机构
+  - 政府开放数据平台
+  - 证券/金融监管机构
+  - 统计机构
+- 每个 `Authority Source` 必须记录：机构名称、职责范围、主域名、法律/许可边界。
+
+### Step B: Data Product Discovery
+- 在每个入选 `Authority Source` 下，枚举可执行 `Data Product`：
+  - 批量下载包
+  - API
+  - 搜索页面
+  - 文档/文件服务入口
+- 每个 `Data Product` 必须有唯一 `product_id`。
+
+### Step C: Inclusion Rule
+- 是否“入选”由 `Data Product` 决定（可执行性与价值），
+- 但“来源归属”必须回挂到 `Authority Source`，禁止把同机构产品写成多个独立机构来源。
+- 入选判断必须增加一条：该 `Data Product` 是否对“企业主轴维度覆盖”有增量价值（无增量则不入选）。
+
+## Mandatory Per-Product Validation Rule
+对“所有入选 Data Product”必须逐个完成以下闭环，缺一不可：
+1. MCP 页面访问与链路实测（入口、查询、分页、限制、鉴权）
+2. 数据加载链路分析（接口/下载包/参数/返回结构）
+3. 编写该 `product_id` 专属 Python 下载脚本
+4. 完成 `sample_size`（默认1000）测试下载并落盘
+5. 输出该 `product_id`“可提供数据维度说明”（字段级）
+
+禁止仅对最终主方案做一次测试。必须是“每个入选 product 都有脚本 + 样本 + 维度说明”。
 
 ## Workflow
-1. 接收国家/地区名称，定义调研边界与术语映射（公司注册、税务登记、受益所有人等）。
-2. 联网检索官方数据源：
-   - 优先级：工商局/企业注册局 > 税务局 > 政府开放数据平台 > 统计局 > 其他官方渠道。
-   - 记录每个来源的数据入口（搜索页、下载页、API 文档页）与可免费获取字段。
-   - 对每个候选数据源逐一执行“维度覆盖盘点”，明确其覆盖了哪些 `Required Coverage Dimensions`。
-   - 最低覆盖要求：每个关键维度优先寻找 `>=2` 个来源（至少 `1` 个官方来源）；若未满足，必须在结论中标注缺口与补齐路径。
-3. 设计全量企业数据下载方案（至少评估以下两类）：
-   - 方案 A：先取开放平台/公开渠道的全量包或接口，再用企业编号/名称回查政府官网详情。
-   - 方案 B：直接使用政府搜索页，通过筛选项 + 模糊关键字碰撞获取全量数据，并处理返回条数限制、翻页限制、关键词覆盖范围。
-   - 产出“数据源对比矩阵”（必填），至少包含：数据源类型、覆盖范围、主键字段、免费披露维度、更新周期、获取方式（下载/API/搜索页）、速率与分页限制、反爬/登录门槛、许可与合规、自动化稳定性评分。
-   - 产出“字段级合并策略”（必填）：为每个关键维度指定 `primary source` 与 `fallback source`，并定义冲突优先级（例如：官方注册局 > 税务局 > 交易所/第三方）。
-4. 使用 Playwright MCP 验证方案可行性：
-   - 实测入口可访问性、查询参数、翻页行为、节流/反爬限制、必要 Cookie/Token。
-   - 结论必须基于实际页面行为，不可只基于静态文档推断。
-5. 锁定可行方案后，分析数据加载链路并实现 Python 预下载脚本：
-   - 完成至少 `sample_size`（默认 1000）数据的预下载测试。
-   - 输出测试数据集（格式不限，如 CSV/JSON/Parquet/SQLite/HTML 文件集）与执行日志摘要。
-6. 按模板生成调研文档：
-   - 严格复用模板结构、表格与引用风格。
-   - 文本内容必须映射到当前国家/地区，不得照搬其他国家示例。
-   - 如模板章节无法映射，可删除对应章节，但需在文档注明删除原因。
-7. 输出“完整下载方案结论”（必填）：
-   - 只能给出 1 个主方案（Primary）和最多 1 个备选方案（Fallback）。
-   - 主方案必须写清：全量初始化路径、增量更新路径、详情回查策略、失败重试与断点续传策略、预计吞吐与完成时长区间。
-   - 若主方案依赖多源，需说明多源合并主键与冲突处理规则。
-   - 明确该主方案如何覆盖 `Required Coverage Dimensions`，并标注仍缺失的维度与补齐路径（如付费文档抓取或人工补录）。
-8. 生成字段覆盖矩阵文件（必填）：
-   - 输出 `<country-or-region>-field-coverage-matrix.md`。
-   - 逐字段给出 `primary source`、`fallback source`、更新周期、可得性状态（可获取/部分可获取/不可获取）。
+1. 接收 `country_or_region`，定义术语映射（公司注册、税务登记、受益所有人等）。
+2. 执行 `Source Discovery Standard`：先 Authority，后 Product。
+3. 对每个入选 `product_id`，执行 `Mandatory Per-Product Validation Rule` 全流程。
+4. 产出对比矩阵（必填，含两层）：
+   - Authority 级对比
+   - Product 级对比（覆盖、主键、更新周期、获取方式、速率限制、门槛、合规、自动化稳定性）
+5. 产出字段级合并策略（必填）：
+   - 每个关键字段给出 `primary product` 与 `fallback product`
+   - 同时给出 `authority-level` 冲突优先级
+6. 产出“企业主轴维度映射表”（必填）：
+   - 每个关键维度对应的主产品/备产品
+   - 主键映射方式与冲突处理
+   - 维度缺口与补齐路径
+7. 生成“下载可行性分析报告”（必填）：
+   - 先按 Authority 汇总
+   - 再按 Product 逐项说明实测结果
+   - 最后输出“组合决策结论”
+8. 生成“完整下载方案结论”（必填）：
+   - 仅给出 1 个 `Primary Combo` 与最多 1 个 `Fallback Combo`
+   - 明确初始化、增量、回查、重试/断点续传、吞吐与时长估算
+   - 标注各组合对 `Required Coverage Dimensions` 的覆盖与缺口补齐路径
+9. 生成字段覆盖矩阵文件（必填）：逐字段列出 primary/fallback、更新周期、可得性状态。
+
+## Combination Decision Rule (Required)
+在“下载可行性分析报告”中必须给出“数据源组合推荐”，并使用固定评分框架：
+- 评分维度（必须同时出现）：
+  - `timeliness`（更新即时性）
+  - `volume`（数据量规模）
+  - `coverage`（披露维度完整度）
+- 每个候选组合都要有可追溯证据与分数。
+- 默认权重（可按任务声明调整）：
+  - timeliness: 0.4
+  - volume: 0.3
+  - coverage: 0.3
+- 输出：
+  - `Primary Combo`：综合最优（最即时 + 最大量 + 最全面）
+  - `Fallback Combo`：主组合不可用时的次优方案
+
+强制补充：组合结论必须明确说明“在企业主轴上新增了哪些维度覆盖”，并给出仍未覆盖维度与原因。
 
 ## Template Mapping Rules
-以 `overseas-registry-source-research/模版.md` 为标准模板执行以下映射：
-- 标题层级保持不变（`#`/`##`/`###`/`####`）。
-- `概况` 章节需替换为目标国家/地区信息，不保留巴西专有描述。
-- `各种编号说明` 章节需替换为目标地区等价编号体系：
-  - 企业主体识别号（如公司注册号/税号/统一商业编号）。
-  - 个人纳税或身份编号（若与企业尽调相关）。
-  - 如目标地区不存在某类编号，删除该小节并注明“该地区无对应统一编号体系”。
-- `官方数据源` 与 `三方数据源` 两章必须保留；每个数据源都要写明：
-  - 主管机构
-  - 入口 URL（搜索/下载/API）
-  - 免费可获取字段范围
-  - 访问限制（登录、频率、地域、验证码等）
-- 模板中的示例文本、示例编号、示例机构名必须全部替换为目标地区对应内容。
-- 引用必须来自实际联网查询结果，且与当前国家/地区一致。
+以 `overseas-registry-source-research/assets/templates/combined-report-template.md` 为基础映射，且新增以下强制章节（若模板缺失则追加）：
+- `Authority Source 汇总`
+- `逐Data Product MCP实测与下载测试结果`
+- `逐Data Product 可提供数据维度说明`
+- `企业主轴维度映射与多源合并策略`
+- `数据源组合评分与推荐（Primary Combo / Fallback Combo）`
+
+并且“每个数据源（Data Product）章节”必须严格使用：
+- `overseas-registry-source-research/assets/templates/source-section-template.md`
+
+最终报告中的数据源部分，禁止使用自由格式叙述替代模板字段。
 
 ## Output
-结果统一存放在：
+结果统一存放：
 `results/overseas-registry-source-research/<YYYYMMDD>/`
 
 最少输出以下文件：
 - `<country-or-region>-数据源调研方案.md`
 - `<country-or-region>-数据下载可行性分析报告.md`
-- `<country-or-region>-download-sample.py`（用于按 `sample_size` 执行预下载验证）
-- `<country-or-region>-test-dataset-<sample_size>.<ext>` 或 `<country-or-region>-test-dataset-<sample_size>/`（目录形式，用于如 `<sample_size>` 个 HTML 文件等多文件数据集）
-- `<country-or-region>-sources.md`（来源清单，含 URL 与页面定位说明）
-- `<country-or-region>-field-coverage-matrix.md`（字段覆盖与多源映射矩阵）
+- `<country-or-region>-sources.md`
+- `<country-or-region>-field-coverage-matrix.md`
+- `<country-or-region>-combined-report.md`
+
+并且对每个入选 `product_id` 都要输出：
+- `<country-or-region>-<authority-id>-<product-id>-download-sample.py`
+- `<country-or-region>-<authority-id>-<product-id>-test-dataset-<sample_size>.<ext>` 或目录形式
+- `<country-or-region>-<authority-id>-<product-id>-dimensions.md`
+
+可选聚合脚本（建议）：
+- `<country-or-region>-download-sample.py`（统一调度各 product 脚本）
 
 ## Working Directory Rules
-- 所有过程文件（抓包、页面快照、临时脚本、调试日志、草稿）统一写入：`temp/overseas-registry-source-research/<YYYYMMDD>/<country-or-region>/`
-- `temp/` 中间产物不得替代最终交付；最终交付文件必须复制或落盘到 `results/overseas-registry-source-research/<YYYYMMDD>/`
+- 过程文件统一写入：
+  `temp/overseas-registry-source-research/<YYYYMMDD>/<country-or-region>/`
+- `temp/` 产物不得替代最终交付；最终文件必须落盘到 `results/...`。
 
 ## Evidence Rules
-- 每条关键结论都要可追溯到具体来源页面。
-- 每个核心字段说明需给出来源 URL 与页面定位信息（栏目名、按钮名、查询参数或接口路径）。
-- 涉及“免费可得字段”时，需明确前提（匿名可查、注册后可查、限频等）。
-- 如某项信息无法确认，明确标记为 `未验证`，禁止臆测。
-- “更新周期”结论必须给出来源证据（页面标注或接口元数据字段，如 `metadata_modified`、`Frequency`）。
+- 每条关键结论必须可追溯到具体来源页面。
+- 每个核心字段说明需给出来源 URL 与页面定位（栏目名、按钮名、查询参数或接口路径）。
+- 涉及“免费可得字段”时需写明前提（匿名可查/注册后可查/限频等）。
+- 无法确认时标注 `未验证`，禁止臆测。
+- 更新周期结论必须有来源证据（页面标注或接口元数据字段）。
 
 ## Quality Checklist
-- 是否覆盖官方主数据源与备选官方来源。
-- 是否提供“多数据源披露维度与更新周期对比矩阵”。
-- 是否覆盖并标注 `Required Coverage Dimensions` 的可得性状态。
-- 是否说明免费获取边界与合规限制（许可、使用条款、隐私约束）。
-- 是否完成 Playwright 实测并给出可复现步骤。
-- 是否提供并验证可执行的 Python 预下载脚本（与样本数据一一对应）。
-- 是否完成 `sample_size` 条（或 `sample_size` 个文件单元）预下载测试与样本落盘。
-- 是否严格按模板映射，且章节删改有理由。
-- 是否给出“唯一主方案 + 备选方案”的完整下载结论（含初始化、增量、回查、容错、时长估算）。
-- 是否满足关键维度“>=2 来源且至少 1 官方来源”的最低覆盖要求，若未满足是否已标记缺口与补齐路径。
+- 是否先完成了 Authority Source 级筛选，再做 Product 级入选？
+- 是否把同机构的多个产品正确归并到同一个 Authority Source？
+- 是否对每个入选 `product_id` 都完成了 MCP 实测？
+- 是否对每个入选 `product_id` 都提供了独立 Python 脚本？
+- 是否对每个入选 `product_id` 都完成了 `sample_size` 下载测试并落盘？
+- 是否对每个入选 `product_id` 都输出了可披露维度说明？
+- 是否完成“企业主轴维度映射表”，并明确每个产品对企业维度的增量贡献？
+- 是否在可行性报告中先 Authority 汇总、再 Product 逐项说明，并给出组合评分与推荐？
+- 是否给出唯一 `Primary Combo` 与最多一个 `Fallback Combo`？
+- 是否覆盖并标注 `Required Coverage Dimensions` 的可得性状态？
+- 是否说明免费边界、许可条款与合规限制？
 
 ## Notes
 - 默认优先输出“可执行方案”，不是泛泛资讯汇总。
-- 若用户未提供模板文件，先按本技能标准结构输出，再提示用户补充模板以进行二次映射版生成。
+- 若用户未提供模板，先按本技能结构输出，再进行二次模板映射。
