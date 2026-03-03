@@ -62,6 +62,7 @@ description: Use when researching country-level enterprise registry sources and 
 - 模板内容已覆盖时，禁止生成额外零散 md
 - 仅当用户明确要求“拆分文件”时，才允许新增子 md
 - `temp/` 仅作过程目录，不能替代 `results/...` 最终交付
+- 样本数据必须以来源原始可下载格式落盘，禁止未经明确要求的二次格式转换（如强制转 CSV/JSON/Parquet）
 
 ## 命名规范
 - `source_id`：小写字母、数字、连字符，建议形如 `israel-companies-authority`
@@ -165,6 +166,7 @@ description: Use when researching country-level enterprise registry sources and 
 - 是否对搜索类型模块明确回答了：支持哪些搜索、是否支持模糊搜索、是否可碰撞式逼近全量？
 - 若搜索模块未纳入主组合，是否写清“未纳入原因 + 可保留的补充价值”？
 - 是否对每个入选模块完成“实测 + 脚本 + 样本下载”？
+- 样本文件是否保持来源原始格式（未做未授权格式转换）？
 - 是否完成企业五维覆盖状态（可获取/部分可获取/不可获取）？
 - 是否给出唯一主组合与最多一个备组合？
 - 是否所有关键判断都附了可复查证据？
