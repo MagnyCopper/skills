@@ -1,4 +1,4 @@
-﻿---
+---
 name: overseas-registry-source-research
 description: Use when researching overseas registry sources and producing a verifiable multi-source strategy with authority-level source selection and per-product MCP/download validation.
 ---
