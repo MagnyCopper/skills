@@ -1,0 +1,4 @@
+interface:
+  display_name: "Registry Source Research"
+  short_description: "Research company registry sources by country"
+  default_prompt: "Use $overseas-registry-source-research to evaluate official and third-party company registry sources for one country or region and produce an evidence-backed report with executable validation artifacts."
