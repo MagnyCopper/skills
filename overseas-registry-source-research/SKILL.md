@@ -1,76 +1,94 @@
 ---
 name: overseas-registry-source-research
-description: Research official and third-party company registry, business registration, and related public-record data sources for a specific country or region, compare source and module combinations, and produce one evidence-backed report with reproducible validation artifacts. Use this whenever the user wants to map enterprise registry sources, assess official registries, tax or financial regulator sources, open-data portals, or commercial providers, choose executable acquisition modules, verify search and download constraints, or design a repeatable country-level business data collection plan with sample downloads and proof.
+description: Use when the user wants to research company registry or business registration sources for a country or region, compare official registries with local and global third-party providers, test download feasibility, search behavior, or access limits, or design a repeatable acquisition plan with sample files and reproducible evidence.
 ---
 
-# 海外企业登记数据源调研
+# Overseas Registry Source Research
 
-调研某个国家或地区的企业登记数据来源，并产出一份可执行、可复查、可落地的调研报告。
+Turn a country-level registry-source question into an acquisition feasibility study.
 
-## 目标
+The goal is not to produce a site list or a narrative report. The goal is to find as many relevant sources as practical, validate what they expose, measure whether they can be downloaded or traversed, save small real artifacts, and recommend executable acquisition strategies.
 
-- 优先找到时效性高的数据源
-- 优先找到覆盖规模大的数据源
-- 优先补齐企业关键维度覆盖
-- 所有关键判断都给出可复查证据
+## Do Not Use This Skill
 
-## 不要使用本技能的场景
+- The user only needs a single-company lookup result.
+- The user only needs homepage field extraction from one site. Use `homepage-info-extractor`.
+- The user only wants a pure legal memo without source testing or acquisition validation.
 
-- 用户要抽取单个机构官网字段，优先使用 `homepage-info-extractor`
-- 用户只要某个企业的单次查询结果，而不是国家级或地区级数据源调研
+## Priority Order
 
-## 输入契约
+When time or budget is constrained, keep this order:
 
-输入参数：
+1. Sweep official sources.
+2. Sweep local third-party sources.
+3. Sweep global third-party sources.
+4. Prove at least one minimum runnable download path with real artifacts.
+5. Expand background and descriptive coverage only as needed to explain the acquisition decision.
 
-- `country_or_region`: 必填，面向读者展示的国家或地区名称
-- `country_or_region_slug`: 必填，用于文件名和目录名，只允许小写字母、数字、连字符
-- `target_language`: 默认中文
-- `generated_at`: 默认当天，格式 `YYYY-MM-DD`
-- `sample_size`: 默认 `1000`
-- `template_path`: 默认 `overseas-registry-source-research/assets/templates/registry-research-template.md`
-- `time_limit_or_budget`: 可选，用于约束付费源和验证深度
+Do not skip local third-party research just because a global provider is easier to name. If local third-party sources are missing, weak, or non-executable, say so with evidence.
 
-## 输出契约
+## Input Contract
 
-结果目录固定为：
+Required:
+
+- `country_or_region`: reader-facing country or region name
+- `country_or_region_slug`: lowercase letters, numbers, hyphens only
+
+Optional:
+
+- `target_language`: default `中文`
+- `generated_at`: default current date in `YYYY-MM-DD`
+- `sample_size`: default `1000`; treat this as the target upper bound for one module sample, not a hard quota when the source is paid, capped, or otherwise constrained
+- `template_path`: default `overseas-registry-source-research/assets/templates/registry-research-template.md`
+- `time_limit_or_budget`: use to limit paid-source exploration or test depth
+- `validation_depth`: default `deep`; use `minimum-runnable` only when the user explicitly wants the smallest viable proof
+
+## Output Contract
+
+Write results to this exact directory:
 
 - `results/<YYYYMMDD>/overseas-registry-source-research/`
 
-最终主报告固定为：
+Do not reverse the nesting into `results/overseas-registry-source-research/<YYYYMMDD>/`.
+
+Produce exactly one main report:
 
 - `<country-or-region-slug>-registry-source-research.md`
 
-每个入选模块的必交付文件：
+For each selected module, produce:
 
 - `<country-or-region-slug>-<source-id>-<module-id>-download-sample.py`
-- `<country-or-region-slug>-<source-id>-<module-id>-test-dataset-<sample_size>.<ext>` 或同名目录
+- `<country-or-region-slug>-<source-id>-<module-id>-test-dataset-<actual-sample-size>.<ext>` or a same-name directory when the source returns many raw files
 
-可选文件：
+For each selected module that uses search, pagination, or browser-gated access, also produce:
+
+- `<country-or-region-slug>-<source-id>-<module-id>-boundary-probe.json`
+
+Optional helper artifact:
 
 - `<country-or-region-slug>-download-sample.py`
 
-强约束：
+Hard rules:
 
-- 使用固定模板 `assets/templates/registry-research-template.md`
-- 模板已覆盖的内容，不要再拆成额外零散 Markdown
-- `temp/` 仅作过程目录，不能替代最终交付目录
-- 样本数据保持来源原始可下载格式，未经明确要求不要二次转成 CSV、JSON、Parquet 等格式
+- Use the fixed template at `assets/templates/registry-research-template.md`.
+- Keep template-covered content inside the one main report. Do not split the analysis into extra Markdown files such as `sources.md`, `feasibility.md`, or `plan.md`.
+- Use `temp/` only as a working directory, never as the final delivery directory.
+- Keep sample files in the source's original downloadable format whenever possible.
+- When a source cannot legally, safely, or economically reach the target `sample_size`, save the largest real raw sample you could obtain within constraints and state the actual size plus blocker evidence.
+- If the user asks for minimum runnable validation, shrink breadth last, not first. Still include official sweep, local third-party sweep, and at least one tested runnable path.
 
-## 命名规则
+## Naming Rules
 
-- `source_id` 只用小写字母、数字、连字符，例如 `israel-companies-authority`
-- `module_id` 只用小写字母、数字、连字符，例如 `company-search`
-- 同一 `source_id` 下 `module_id` 必须唯一
+- `source_id`: lowercase letters, numbers, hyphens only, for example `israel-companies-authority`
+- `module_id`: lowercase letters, numbers, hyphens only, for example `company-search`
+- Within one `source_id`, every `module_id` must be unique
 
-## 术语和覆盖口径
+## Shared Terminology
 
-统一使用以下术语：
+- `数据源`: source at institution or platform level, such as a registry authority, tax authority, open-data portal, local reseller, or global provider
+- `模块`: concrete executable entry under one source, such as an API, bulk package, search page, detail page, or document service
 
-- `数据源`：机构或平台级来源，例如工商主管机构、税务机构、开放数据平台、证券监管机构、第三方平台
-- `模块`：同一数据源下的具体执行入口，例如 API、批量下载包、搜索页、文档服务
-
-企业五维覆盖口径固定为：
+Use these fixed coverage dimensions:
 
 - 主体识别
 - 状态与生命周期
@@ -78,123 +96,243 @@ description: Research official and third-party company registry, business regist
 - 财务信息
 - 合规文档
 
-## 执行顺序
+Use these fixed third-party classes:
 
-按以下顺序执行，不要跳步。
+- `当地第三方`: provider focused on the same country or region, or clearly operating with local registry coverage and local commercial context
+- `国际第三方`: global or multi-country provider not primarily local to the target jurisdiction
 
-### 1. 建立国家背景最小集
+## Execution Gates
 
-只收集与企业登记直接相关的信息：
+Follow this order. Do not skip a gate.
 
-- 登记制度与主管层级
-- 企业注册关键流程
-- 企业相关编号体系，包括国家级、地区级、税务级编号
+### Gate 1: Build the minimum country background
 
-### 2. 发现数据源
+Collect only what is necessary to interpret acquisition feasibility:
 
-先官方，后第三方。官方来源至少检查以下类别；如果客观不存在，要明确给出证据：
+- registry governance level
+- enterprise registration flow
+- identifier systems tied to company lookup or download
 
-1. 公司注册或工商主管机构
-2. 税务主管机构
-3. 政府开放数据平台
-4. 证券或金融监管机构
-5. 统计机构
+Do not turn this section into general country research. Keep it lean.
 
-对每个数据源都记录：
+### Gate 2: Sweep official sources first
 
-- 机构名称
-- 职责范围
-- 主域名
-- 法律或许可边界
+Check at least these official categories. If one does not exist or is not relevant, record evidence:
 
-### 3. 先做模块全清单，再做模块筛选
+1. company registry or corporate affairs authority
+2. tax authority
+3. government open-data portal
+4. securities or financial regulator
+5. statistical agency
 
-对每个入选数据源，先列出所有与企业概念有关且可执行的模块，再逐个判断是否纳入。
+For each official source, record:
 
-不要：
+- institution name
+- scope of responsibility
+- main domain
+- legal or license boundary
+- access prerequisites
 
-- 只挑 1 到 2 个最容易下载的模块
-- 把同一机构的多个模块拆成多个数据源
-- 只因为下载不稳定或批量不方便，就忽略搜索类型模块
+### Gate 3: Sweep third-party sources in the correct order
 
-名称或编号检索模块规则：
+Do this in two passes:
 
-- 若存在，必须实测并给出证据，即使最终不入选也要说明理由
-- 若不存在，明确写出“未发现名称或编号检索模块”，并附检索证据
+1. local third-party sweep
+2. global third-party sweep
 
-搜索能力评估规则：
+For every third-party source, record:
 
-- 写清支持哪些检索方式，例如名称、注册号、税号、地址、法人或高管
-- 实测是否支持模糊搜索，例如前缀、包含、近似、同音
-- 评估能否通过关键词枚举、编号段遍历、分页遍历等方式逼近全量
-- 若判定不可行，附不可行证据，例如结果上限、验证码、频控、封禁策略、法务限制
-- 即使不适合作为主下载路径，也要说明补充价值，例如断点补数、字段补齐、质量校验
+- provider name
+- class: `当地第三方` or `国际第三方`
+- target-country relevance
+- access model: anonymous, signup, subscription, sales contact, KYC
+- legal or license boundary
+- whether it is selected
 
-### 4. 对每个入选模块完成验证闭环
+If a global provider is selected ahead of a local one, explain why with evidence. Acceptable reasons include:
 
-每个入选模块都完成：
+- no credible local provider found
+- local provider has materially weaker coverage
+- local provider fails executable validation
+- local provider exceeds budget or legal boundary
 
-1. 访问链路实测，优先使用 Playwright MCP
-2. 数据链路分析，包括请求参数、分页、返回结构、下载入口
-3. 生成专属 Python 下载脚本
-4. 下载 `sample_size` 样本并落盘
-5. 输出字段级维度映射和增量贡献说明
+### Gate 4: Build a full module census before selection
 
-不要只给结论，不给脚本和样本。
+For each source under consideration, treat module discovery as a census task, not a shortlist task. List all enterprise-related modules you can find before choosing any of them.
 
-### 5. 收敛为最终组合
+Do not:
 
-组合评分默认权重：
+- pick only the easiest 1 or 2 modules
+- split one institution into many fake sources
+- ignore search modules only because bulk download looks easier
+
+For every source card, report all of these:
+
+- module census status: `complete` or `partial`
+- discovered module count
+- usable module count
+- partially usable module count
+- unusable module count
+- unverified module count
+- selected module count
+
+If the census is not complete, label it `partial`, explain the stop condition, and avoid language that implies full coverage.
+
+Search or lookup modules have special handling:
+
+- If a name or identifier search module exists, test it even if it will not be selected later.
+- If no such module exists, write `未发现名称或编号检索模块` and attach search-path evidence.
+
+For every discovered module row, always include:
+
+- module URL or direct landing page URL
+- availability status: `可用`, `部分可用`, `不可用`, or `未验证`
+- download-feasibility status: `可执行`, `受限`, `不可执行`, or `未验证`
+- concrete reason when the module is not fully usable
+
+Preferred reason labels when applicable:
+
+- `无公开入口`
+- `仅产品页/仅营销页`
+- `需登录`
+- `需付费`
+- `需KYC`
+- `验证码/反爬`
+- `403/封禁`
+- `TLS/连接失败`
+- `无结构化返回`
+- `链路不稳定`
+- `未完成验证`
+
+### Gate 5: Run the validation loop for every selected module
+
+Each selected module must complete this loop:
+
+1. access-path test
+2. request and response analysis
+3. boundary testing
+4. downloader generation
+5. real sample download
+6. field-to-dimension mapping
+7. usage verdict
+
+Do not stop at qualitative conclusions.
+
+#### Boundary testing requirements
+
+Whenever applicable, measure and report actual values for:
+
+- auth boundary: anonymous, signup, subscription, KYC
+- maximum verified page size
+- maximum verified offset or page depth
+- single-query result cap
+- rate-limit threshold or burst behavior
+- captcha or anti-bot trigger point
+- cursor or token expiry behavior
+- date window, file window, or package-size limit
+- response format and packaging
+
+Measure actual values where safe, legal, and technically practical. Use documented vendor limits to complement live tests, and do not brute-force past published limits, login walls, paywalls, captchas, or protective controls merely to force a number.
+
+If one metric does not apply, mark it `N/A` and explain why. If it applies but you could not safely or legally verify it, mark it `未验证`, record the blocker evidence, and report the highest safely verified value if you have one. Do not leave it blank.
+
+#### Search and collision testing requirements
+
+For every search-capable module, state and test:
+
+- supported search keys: name, registration number, tax number, address, officer, or others
+- fuzzy-search behavior: prefix, contains, approximate, phonetic, or unsupported
+- whether collision-style traversal can approach full coverage
+- the hard boundary numbers behind that judgment
+
+Collision-style traversal can include:
+
+- keyword enumeration
+- registration-number range walking
+- page walking
+- alphabet or prefix partitioning
+
+If collision-style traversal is not feasible, show the boundary that breaks it, such as result caps, captchas, hard rate limits, or legal restrictions. If the limit is only documented or indirectly observed, label that clearly rather than presenting it as directly verified.
+
+Even when a module is not selected, still give it a clear usability verdict, direct URL, and unusable or constrained reason in the source-level module census.
+
+### Gate 6: Generate scripts and save artifacts
+
+Before writing a downloader from scratch, inspect `scripts/` and adapt the closest template.
+
+Bundled templates:
+
+- `scripts/http_download_template.py`: single-endpoint raw download skeleton
+- `scripts/paginated_download_template.py`: page or offset-based raw download skeleton
+- `scripts/search_boundary_probe.py`: search and pagination boundary probe
+- `scripts/playwright_probe_template.py`: browser-gated source probe skeleton
+- `scripts/validate_registry_artifacts.py`: output-structure validator
+
+For each selected module, save:
+
+- module-specific download script
+- real sample artifact in original format
+- boundary probe output when boundary testing applies
+
+### Gate 7: Synthesize acquisition strategies
+
+The final report must include all of these sections:
+
+1. `官方主方案`: the best official-only executable path
+2. `第三方组合方案`: the best executable third-party-led combination, respecting local-before-global priority, or an explicit `无可执行第三方主组合` verdict with evidence
+3. `备选方案`: at most one fallback combination
+4. `最小可运行路径`: the smallest real path that already proves download feasibility
+
+Use default scoring weights unless the user specifies otherwise:
 
 - 时效性 `0.4`
 - 规模 `0.3`
 - 覆盖度 `0.3`
 
-输出限制：
+If two third-party choices score similarly, prefer the local provider.
 
-- 主组合只能有一个
-- 备组合最多一个
+## Evidence Rules
 
-报告结构固定为：
+Every key claim must include:
 
-1. 数据源总览
-2. 按数据源展开模块
-3. 组合结论与下载方案
+- source URL
+- locator such as page section, button, parameter, endpoint path, or response field
+- access prerequisite such as anonymous, signup, paid, KYC, or rate-limited
+- test date
 
-## 证据规则
+Explicit labels:
 
-每条关键结论都附：
+- `已验证`: tested directly
+- `未验证`: not confirmed
+- `推断`: inference based on evidence, not directly confirmed
 
-- 来源 URL
-- 页面定位，例如栏目、按钮、参数、接口路径
-- 访问前提，例如匿名、注册、付费、KYC、限频
+Additional rules:
 
-显式标注：
+- Update-frequency claims must be backed by a page or API response.
+- `合作洽谈` must be only `Y` or `N`, backed by pricing, terms, access-restriction, or sales-contact evidence.
+- Legal and licensing claims should cite terms, copyright, robots, pricing, or portal-policy pages when available.
+- Every discovered module row must show a direct module URL plus enough evidence to explain why it is usable, partially usable, unusable, or still unverified.
 
-- 无法确认时写 `未验证`
-- 更新周期结论必须有页面或接口证据
-- `合作洽谈` 只写 `Y` 或 `N`，并附价格页、条款页、访问限制页或商务页证据
+## Output Template
 
-风险等级口径：
+Always start from `assets/templates/registry-research-template.md`.
 
-- 低：访问稳定、限制轻、合规清晰
-- 中：存在登录、限频、偶发反爬，或许可边界部分不清
-- 高：强反爬、高门槛、许可不清，或法律风险高
+The template's section order, tables, and checklist are part of the contract. Keep the final report concise, but do not delete required sections. If the bottleneck is executable validation, spend the effort there rather than padding descriptive prose.
 
-## 输出模板
+## Pre-Submission Checklist
 
-始终从 `assets/templates/registry-research-template.md` 开始填充报告。模板中的章节顺序、表格结构和检查项都视为固定契约。
-
-## 提交前自检
-
-- 是否只输出 1 个主报告 Markdown？
-- 是否使用了固定模板？
-- 是否先做数据源发现，再做模块入选？
-- 是否对每个数据源先做企业相关模块全清单规划？
-- 是否完成名称或编号检索模块验证，或证据化声明不存在？
-- 是否对所有搜索类型模块说明了搜索方式、模糊搜索和碰撞逼近全量的可行性？
-- 是否对每个入选模块完成实测、脚本和样本下载？
-- 样本文件是否保持来源原始格式？
-- 是否完成企业五维覆盖状态标注？
-- 是否给出唯一主组合和最多一个备组合？
-- 是否为所有关键判断附了可复查证据？
+- Did you write to `results/<YYYYMMDD>/overseas-registry-source-research/`?
+- Is there exactly one main report Markdown?
+- Does the main report include both `官方主方案` and `第三方组合方案`, even when the third-party outcome is `无可执行第三方主组合`?
+- Did you sweep official sources first?
+- Did you sweep local third-party sources before global ones?
+- Did you build module census lists before selecting modules?
+- Does every source card show module census status and per-source module counts?
+- Does every discovered module row include a module URL, availability status, download-feasibility status, and a reason when not fully usable?
+- Did you test search modules or explicitly prove they do not exist?
+- Did you record actual boundary numbers instead of only qualitative statements?
+- Does every selected module have a download script and a real sample artifact?
+- Does every applicable selected module have a boundary-probe artifact?
+- Are sample files preserved in original source format?
+- Did you avoid extra scattered Markdown outputs?
+- Does every key judgment include reproducible evidence?

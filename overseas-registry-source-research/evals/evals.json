@@ -3,21 +3,66 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "请调研以色列可用于企业名录采集的官方和第三方数据源，给出唯一主组合、最多一个备组合，并为每个入选模块提供可复现的下载样本方案。",
-      "expected_output": "Produce one country-level registry source research report using the fixed template, with module-level evidence, download scripts, and sample artifact planning.",
-      "files": []
+      "prompt": "请调研以色列可用于企业名录采集的官方、当地第三方、国际第三方数据源。不要只列站点。我要一份单独主报告，里面同时给出官方主方案和第三方组合方案，并为每个入选模块提供真实样本下载脚本、原始格式样本文件和可复查证据。",
+      "expected_output": "Produce exactly one main report under the fixed results path, with both official and third-party strategy sections, selected-module download scripts, raw sample artifacts, and reproducible evidence. If no third-party path qualifies, say so explicitly instead of forcing a weak selection.",
+      "files": [],
+      "expectations": [
+        "The result directory is exactly results/<YYYYMMDD>/overseas-registry-source-research/ with one main report Markdown.",
+        "The main report contains both an official strategy section and a third-party strategy section.",
+        "Each selected module has a download-sample.py artifact and at least one real raw sample artifact.",
+        "Key source-selection claims are backed by reproducible evidence such as URL, locator, access prerequisite, and test date.",
+        "If no third-party acquisition path qualifies, the report states that outcome explicitly instead of manufacturing a weak third-party combination."
+      ]
     },
     {
       "id": 2,
-      "prompt": "我想做巴西企业登记数据覆盖研究，不要只列站点。请先按官方机构做数据源清单，再评估每个数据源下和企业相关的所有模块，特别检查名称或编号检索模块能不能支持模糊搜索和碰撞式逼近全量。",
-      "expected_output": "Produce a source-first analysis that includes complete module inventorying, search capability validation, and explicit evidence for inclusion or exclusion decisions.",
-      "files": []
+      "prompt": "我想做巴西企业登记数据覆盖研究。请先扫官方源，再扫当地第三方，再扫国际第三方。对于存在名称或编号检索的模块，在安全、合法、技术上可行的范围内尽量实测边界数值，不要只写有频控或有上限；如果某些指标被登录、付费、限频或其他边界挡住，就写未验证并附阻塞证据，不要猜。",
+      "expected_output": "Produce a source-first analysis with local-before-global third-party ordering and measured boundary values where safely possible for search-capable modules, plus explicit blocker evidence and `未验证` labels where direct verification was not safe or feasible.",
+      "files": [],
+      "expectations": [
+        "The report orders discovery as official sources first, then local third-party sources, then global third-party sources.",
+        "Search-capable modules include concrete boundary values where they were safely measured.",
+        "Boundary items that could not be safely or legally verified are labeled `未验证` with blocker evidence rather than guessed numbers.",
+        "The report distinguishes directly verified limits from documented or inferred limits.",
+        "The report explains whether collision-style traversal can approach full coverage and what boundary blocks it when the answer is no."
+      ]
     },
     {
       "id": 3,
-      "prompt": "帮我评估阿联酋企业注册数据能不能做持续增量下载。我要看到主数据源、备选源、访问门槛、法律或许可边界、样本下载脚本命名和最终落盘路径。",
-      "expected_output": "Produce a report that covers source selection, module validation, access constraints, legal boundaries, incremental download strategy, naming rules, and final result path compliance.",
-      "files": []
+      "prompt": "帮我评估阿联酋企业注册数据能不能做最小可运行的持续下载验证。预算有限，不要求铺满所有源，但仍然要完成官方 sweep 和当地第三方 sweep，并至少证明一条真实可运行路径，落盘脚本、样本文件和边界探测文件。如果拿不到目标样本量，就保留能合法安全拿到的最大原始样本，并写清原因。",
+      "expected_output": "Produce a minimum-runnable acquisition study that still completes official and local third-party sweeps and proves at least one real runnable path with scripts, raw sample files, and a boundary-probe artifact. If the target sample size is unreachable under the constraints, preserve the largest lawful raw sample and explain why.",
+      "files": [],
+      "expectations": [
+        "The report still includes an official sweep and a local third-party sweep even under minimum-runnable constraints.",
+        "At least one module is proven runnable with a download script, a real raw sample artifact, and a boundary-probe artifact.",
+        "If the requested sample size is not reached, the report preserves the largest lawful raw sample and explains the blocker.",
+        "The report names one minimum runnable path and explains why it is sufficient proof of acquisition feasibility.",
+        "The final output avoids extra scattered Markdown files beyond the one main report."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "请研究墨西哥企业登记相关数据源。不要把输出拆成 sources.md、plan.md、feasibility.md 之类多个 Markdown。我只接受 results/<YYYYMMDD>/overseas-registry-source-research/ 下的一份主报告，外加模块脚本和样本原始文件。报告里必须明确说明哪些当地第三方没有被选中以及为什么。",
+      "expected_output": "Produce one-report-only output in the exact results path, avoid scattered Markdown artifacts, and explain local third-party exclusions with evidence.",
+      "files": [],
+      "expectations": [
+        "There is exactly one main report Markdown in results/<YYYYMMDD>/overseas-registry-source-research/.",
+        "The output does not split template-covered analysis into extra Markdown files such as sources.md or plan.md.",
+        "The report explicitly names local third-party sources that were not selected and gives evidence-backed reasons.",
+        "Each discovered module row includes a module URL, availability status, download-feasibility status, and a reason when it is not fully usable."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "我要做新加坡企业登记数据采集方案。请特别检查第三方优先级：如果国际知名第三方比当地第三方更容易拿到，也不能直接跳过当地第三方。只有在当地第三方缺失、覆盖明显更差、验证失败或超预算时，才允许国际第三方优先，并且要把理由写进第三方组合方案；如果最后没有合格第三方主路径，也要明确写出来。",
+      "expected_output": "Produce a report that enforces local-third-party priority and only elevates a global provider with explicit evidence-backed justification inside the third-party strategy. If no third-party path qualifies, state that outcome explicitly instead of manufacturing a combination.",
+      "files": [],
+      "expectations": [
+        "The report evaluates local third-party candidates before global third-party candidates.",
+        "A global third-party source is only elevated when the report gives evidence-backed reasons such as missing local providers, weaker local coverage, failed local validation, or budget/legal blockers.",
+        "If no third-party path qualifies, the report states `无可执行第三方主组合` or an equivalent explicit no-third-party verdict.",
+        "The third-party strategy section explains the local-versus-global priority handling rather than only naming a winner."
+      ]
     }
   ]
 }

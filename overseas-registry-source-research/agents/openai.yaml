@@ -1,4 +1,4 @@
 interface:
   display_name: "Registry Source Research"
-  short_description: "Research company registry sources by country"
-  default_prompt: "Use $overseas-registry-source-research to evaluate official and third-party company registry sources for one country or region and produce an evidence-backed report with executable validation artifacts."
+  short_description: "Validate registry acquisition paths by country"
+  default_prompt: "Use $overseas-registry-source-research to map official registries, local third-party sources, and global third-party sources for one country, test download feasibility and boundary conditions, and produce one evidence-backed report with an official plan plus either a qualified third-party plan or an explicit evidence-backed no-third-party verdict."
