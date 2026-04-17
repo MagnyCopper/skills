@@ -1,0 +1,21 @@
+{
+  "_comment": "Fixed JSON output template for company-domain-finder. Every key must be present in every output.",
+  "_confidence_level_values": "Must be one of: high, medium, low, or null (when no domain found)",
+  "_search_methods_values": "Any combination of: web_search, wikipedia, page_verify, playwright_verify, whois_dig, duckduckgo_html, baidu_search",
+  "company_id": "1608750612",
+  "company_name": "Mubadala",
+  "country_or_region": "阿联酋",
+  "official_domain": "https://www.mubadala.com/",
+  "confidence_level": "high",
+  "evidence_sources": [
+    "https://en.wikipedia.org/wiki/Mubadala_Investment_Company — infobox website field",
+    "https://www.mubadala.com/ — page title and footer copyright confirm company name"
+  ],
+  "search_methods": ["web_search", "wikipedia", "page_verify"],
+  "search_queries_used": [
+    "\"Mubadala\" official site",
+    "\"Mubadala\" UAE official website",
+    "\"Mubadala\" site:wikipedia.org"
+  ],
+  "timestamp": "2026-04-17T10:30:00+08:00"
+}
