@@ -1,37 +1,92 @@
 ---
 name: company-domain-finder
-description: >
-  Find a company's official website domain(s) given its name.
-  Use this skill whenever you need to discover or verify a company's official web presence.
+description: "Use when discovering or verifying a company's official website domain, especially when the target legal entity has a country or jurisdiction."
 ---
 
 # Company Domain Finder
 
-本技能用于通过搜索引擎查找并验证公司的官方网站域名。考虑到企业可能存在多个官网（全球站、地区站等），本技能支持收集多个域名并进行可信度分级。
+本技能用于查找企业官方网站域名，并判断候选域名对应的**法人主体**是否就是用户传入的目标企业。
 
-## 执行步骤 (Execution Steps)
+核心目标不是"找到同名品牌网站"，而是"找到目标国家/地区下目标法人主体可下载、可采信的官网域名"。
 
-当需要查找公司域名时，请严格遵循以下步骤进行操作：
+---
 
-1. **获取输入参数**：从用户或上下文中读取所需查询的 `company_name`（企业名称）。具体要求参考同级目录下的 `prompt.md`。
-2. **执行初步搜索**：使用可用的网络搜索工具（如 `web_search`），以“企业名称 + 官方网站”作为查询词进行搜索。如果适用，尝试该语言的本地化搜索。
-3. **多源交叉验证**：
-   - 检查维基百科（Wikipedia）、领英（LinkedIn）、彭博（Bloomberg）或当地权威商业名录等第三方页面中登记的官网链接。
-   - 对比多个搜索结果，筛选出可能存在的多个有效域名（如主站、分站）。
-4. **验证网站内容**：抓取或访问候选域名的网页内容（如首页或“关于我们”页面），核对网页的标题（`<title>`）、页面底部的版权声明（Footer copyright）以及联系地址，确认是否与目标企业匹配。
-5. **置信度评级与格式化输出**：根据收集到的证据，对每一个提取出的域名进行 `A/B/C/D` 置信度评级（标准见下方）。最后，严格按照 `prompt.md` 中定义的 JSON 格式要求，将结果保存为文件。
+## ⚠️ 最高优先级：文件保存规则
 
-## 置信度评级标准 (Confidence Levels)
+**你必须完成以下两件事，缺一不可：**
 
-在输出的 JSON 中，每个 `domain` 对象必须包含一个 `confidence_level` 字段，请严格按照以下标准进行判定：
+1. **先创建目录**：根据用户传入的 `wdcode` 参数，执行 `mkdir -p temp/aidomain/<wdcode>/` 创建目录。
+2. **必须写文件**：搜索完成后，必须将结果 JSON 保存到 `temp/aidomain/<wdcode>/domain.json` 文件中，不能只在对话中输出 JSON 而不写文件。
+3. **即使无结果也必须写文件**：`domains` 为空数组 `[]` 也要写入。
+4. **路径中的目录名必须是用户传入的 wdcode 值**，不要用公司名、国家名或其他值替代。
 
-- **`A`级 (极高/确信)**：具备强有力的**多源交叉验证**。
-  - 标准：权威第三方（维基百科/LinkedIn/官方工商系统）有登记，**且**网页内容的版权声明（Footer）、公司介绍与目标企业完全吻合。
-- **`B`级 (高/大概率)**：具备**单一可靠来源**验证。
-  - 标准：搜索引擎自然排名绝对第一，网站内容高度匹配，但缺乏第三方权威词条背书；或者第三方权威机构有登记但网页暂时无法打开抓取以作进一步验证。
-- **`C`级 (中/疑似)**：具备**部分特征关联**。
-  - 标准：域名与公司名高度相关，但网页无明确的版权归属声明；或者是某个核心产品页、子品牌、关联公司的官网，无法百分百确认是母公司主站。
-- **`D`级 (低/存疑)**：**弱相关**。
-  - 标准：搜索引擎抓取到的结果，但网站疑似占位符、历史遗留死链，或者是B2B综合平台（如阿里巴巴、黄页等）上的企业商铺页，而非独立的企业域名。
+---
 
-> **提示**：如果在执行过程中遇到困难或无法找到任何域名，请将 `domains` 数组置空 `[]`，不要伪造或编造域名。
+## 输入参数
+
+用户 prompt 中会以 `key=value` 格式提供以下参数：
+
+- `wdcode`：企业标识码，用于构建输出路径。
+- `company_name`：目标企业法人名称，保留完整后缀（PTE. LTD.、LIMITED、INC.、GMBH 等）。
+- `country`：目标企业所属国家/地区。
+
+---
+
+## 强制规则：法人主体归属验证
+
+候选 URL 只有通过法人主体归属验证后，才能进入 `domains`。
+
+`domains` 输出的是域名结果，不是证据页面 URL。任何 About、Contact、Legal、Privacy、办公室页面等长路径 URL 只能作为核验证据，不能直接当作最终域名结果展示。
+
+以下情况即使域名真实、品牌匹配、搜索排名靠前，也不能作为可下载官网输出：
+
+- 网站主体是外国母公司、上市母公司或集团总部，而用户要的是某个国家/地区子公司、分支机构或本地法人。
+- 网站主体是子公司、关联公司、经销商、品牌站、产品站，而不是用户传入的目标法人。
+- 网站只在第三方目录里被列为 website，但官网页面本身没有法人主体、注册地址、注册号或明确运营主体证据。
+- 法律声明、隐私政策、服务条款、页脚版权、投资者关系页面或工商/证券资料显示网站属于其他国家/地区或其他法人。
+- 同名公司存在于多个国家/地区，候选域名无法证明归属于 `country` 下的目标企业。
+
+被排除的候选 URL 应放入 `rejected_candidates`，并写明 `reject_reason`，不要直接丢弃。
+
+## 执行步骤
+
+1. **创建输出目录**：按用户 prompt 中指定的路径，先执行 `mkdir -p` 创建目录。
+
+2. **搜索候选域名**
+   - 使用精确公司名搜索：`"company_name" official website`、`"company_name" domain`。
+   - 加入目标国家/地区：`"company_name" "country" website`。
+   - 按国家/地区加入本地注册号关键词（Singapore UEN/ACRA，Australia ABN/ACN，UK Companies House，India CIN/GSTIN，France SIREN/SIRET 等）。
+   - 检查权威来源：官方工商系统、证券交易所公告、年报、LEI、LinkedIn、Bloomberg、Wikipedia、当地商业目录。
+
+3. **抓取并核验网站内容**
+   - 优先查看首页、About/About Us、Contact、Legal notice、Terms、Privacy Policy、Imprint、Footer、Investor Relations。
+   - 提取法人名称、国家/地区、注册号、注册地址、办公地址、邮箱域名、版权归属、母子公司关系描述。
+
+4. **执行法人主体归属验证**
+   - 至少满足一个强证据，或两个相互独立的中等证据，且不能存在强冲突。
+   - 强证据：官网明确出现目标法人完整名称；注册号匹配；法律页面显示运营主体就是目标法人；官方登记资料绑定域名；注册地址匹配。
+   - 中等证据：About 页面出现目标法人名称+国家/地区+业务描述；办公室页面信息匹配；可信第三方绑定域名；LinkedIn/年报印证。
+   - 强冲突：法律主体显示为其他国家公司；About 页面只介绍集团/母公司；候选站明确是集团站/品牌站/经销商站。
+
+5. **关系分类**（为每个候选 URL 标注 `relationship_to_target`）：
+   `same_entity`、`local_entity_operated_site`、`foreign_parent_or_group_site`、`subsidiary_or_affiliate_site`、`branch_or_representative_office`、`same_name_different_jurisdiction`、`brand_or_product_site`、`directory_only_unverified`、`unknown`。
+
+6. **写入结果文件**：按用户 prompt 指定的路径写入 JSON 文件，写入后确认文件已存在。
+
+## 置信度评级
+
+- `A`：强证据确认域名属于目标法人。官网法律主体/注册号/注册地址/官方登记资料中至少一项强匹配。
+- `B`：较高可信。至少一个强证据或多个中等证据，无强冲突。
+- `C`：仅部分相关。品牌或目录信息相关，但法人归属不完整。不能放入 `domains`，应放入 `rejected_candidates`。
+- `D`：弱相关或存疑。死链、占位页、B2B商铺页、同名异国公司、主体冲突。必须拒绝。
+
+## 域名结果规范化
+
+- `root_domain`：只保留主域名，如 `wellington.com`。
+- `homepage_url`：只放规范化官网首页，如 `https://www.wellington.com/`。
+- `evidence_pages`：放核验用的长路径页面（About、Contact、Legal、Privacy、办公室页面等）。
+- 禁止把 `/about-us`、`/contact`、`/privacy-policy` 等长路径作为最终域名结果。
+
+## 全球企业特别规则
+
+当企业为跨国集团时，必须以 `country` 为准。如果候选域名对应外国母公司/集团站而非目标国家法人自身的网站，必须拒绝。
