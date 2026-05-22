@@ -40,7 +40,7 @@
     {
       "url": "https://www.example.sg",
       "homepage_url": "https://www.example.sg/",
-      "root_domain": "example.sg",
+      "root_domain": "www.example.sg",
       "domain_type": "目标法人官网",
       "confidence_level": "A",
       "accept_for_download": true,
@@ -61,7 +61,7 @@
     {
       "url": "https://www.example.com",
       "homepage_url": "https://www.example.com/",
-      "root_domain": "example.com",
+      "root_domain": "www.example.com",
       "domain_type": "非目标法人官网",
       "confidence_level": "D",
       "accept_for_download": false,
@@ -94,7 +94,7 @@
 
 ## 域名规范化
 
-- `root_domain`：只保留主域名（如 `wellington.com`），不含路径。
+- `root_domain`：提取完整的网络域名（包含 www 等子域名，如 `www.wellington.com`），**必须去掉前缀 `http://` 或 `https://`**，且不含任何路径或斜杠 `/`。
 - `homepage_url`：规范化首页（如 `https://www.wellington.com/`）。
 - `evidence_pages`：核验用长路径页面（About、Contact、Legal 等）。
 - 禁止把 `/about-us`、`/contact`、`/privacy-policy` 等长路径作为最终域名结果。
