@@ -11,26 +11,6 @@ description: "Use when discovering or verifying a company's official website dom
 
 ---
 
-## ⚠️ 最高优先级：文件保存规则
-
-**你必须完成以下两件事，缺一不可：**
-
-1. **先创建目录**：根据用户传入的 `wdcode` 参数，执行 `mkdir -p temp/aidomain/<wdcode>/` 创建目录。
-2. **必须写文件**：搜索完成后，必须将结果 JSON 保存到 `temp/aidomain/<wdcode>/domain.json` 文件中，不能只在对话中输出 JSON 而不写文件。
-3. **即使无结果也必须写文件**：`domains` 为空数组 `[]` 也要写入。
-4. **路径中的目录名必须是用户传入的 wdcode 值**，不要用公司名、国家名或其他值替代。
-
----
-
-## 输入参数
-
-用户 prompt 中会以 `key=value` 格式提供以下参数：
-
-- `wdcode`：企业标识码，用于构建输出路径。
-- `company_name`：目标企业法人名称，保留完整后缀（PTE. LTD.、LIMITED、INC.、GMBH 等）。
-- `country`：目标企业所属国家/地区。
-
----
 
 ## 强制规则：法人主体归属验证
 
@@ -46,7 +26,7 @@ description: "Use when discovering or verifying a company's official website dom
 - 法律声明、隐私政策、服务条款、页脚版权、投资者关系页面或工商/证券资料显示网站属于其他国家/地区或其他法人。
 - 同名公司存在于多个国家/地区，候选域名无法证明归属于 `country` 下的目标企业。
 
-被排除的候选 URL 应放入 `rejected_candidates`，并写明 `reject_reason`，不要直接丢弃。
+所有搜索到的候选 URL（包括不符合目标法人的）都应放入 `domains` 数组中，通过置信度 `confidence_level` 的 A/B/C/D 评级以及 `accept_for_download` 来区分它们，不要直接丢弃。
 
 ## 执行步骤
 
@@ -73,19 +53,6 @@ description: "Use when discovering or verifying a company's official website dom
 
 6. **写入结果文件**：按用户 prompt 指定的路径写入 JSON 文件，写入后确认文件已存在。
 
-## 置信度评级
-
-- `A`：强证据确认域名属于目标法人。官网法律主体/注册号/注册地址/官方登记资料中至少一项强匹配。
-- `B`：较高可信。至少一个强证据或多个中等证据，无强冲突。
-- `C`：仅部分相关。品牌或目录信息相关，但法人归属不完整。不能放入 `domains`，应放入 `rejected_candidates`。
-- `D`：弱相关或存疑。死链、占位页、B2B商铺页、同名异国公司、主体冲突。必须拒绝。
-
-## 域名结果规范化
-
-- `root_domain`：只保留主域名，如 `wellington.com`。
-- `homepage_url`：只放规范化官网首页，如 `https://www.wellington.com/`。
-- `evidence_pages`：放核验用的长路径页面（About、Contact、Legal、Privacy、办公室页面等）。
-- 禁止把 `/about-us`、`/contact`、`/privacy-policy` 等长路径作为最终域名结果。
 
 ## 全球企业特别规则
 
