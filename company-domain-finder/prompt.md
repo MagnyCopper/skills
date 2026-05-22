@@ -26,21 +26,6 @@
 
 ---
 
-## 法人主体归属验证
-
-候选域名进入 `domains` 前，必须验证：
-
-- 网站或权威来源能把候选域名绑定到完整的 `company_name`。
-- 网站对应主体的国家/地区与 `country` 一致。
-- 不存在强冲突证据表明该域名属于外国母公司、集团站、子公司、关联公司、经销商、品牌站或同名异国公司。
-
-以下候选必须拒绝并放入 `rejected_candidates`：
-
-- 运营主体不是目标法人（根据法律声明、隐私政策、页脚、注册信息等判断）。
-- 域名属于外国母公司/集团站/上市主体，目标企业只是其分支或子公司。
-- 域名属于子公司/关联公司/经销商/品牌/产品，而非目标法人。
-- 仅第三方目录列出，官网页面无法核验法人主体。
-- 同名公司在其他国家/地区，无法证明与目标法人一致。
 
 ## 输出 JSON 格式
 
@@ -72,17 +57,17 @@
       },
       "evidence_sources": ["官网 Terms 页面显示运营主体为 EXAMPLE PTE. LTD."],
       "evidence_pages": ["https://www.example.sg/about-us"]
-    }
-  ],
-  "rejected_candidates": [
+    },
     {
       "url": "https://www.example.com",
       "homepage_url": "https://www.example.com/",
       "root_domain": "example.com",
+      "domain_type": "非目标法人官网",
+      "confidence_level": "D",
+      "accept_for_download": false,
       "matched_entity_name": "Example Limited",
       "matched_jurisdiction": "Australia",
       "relationship_to_target": "foreign_parent_or_group_site",
-      "accept_for_download": false,
       "reject_reason": "该域名对应外国母公司/集团主体，不是目标法人自身官网。",
       "evidence_sources": ["Privacy Policy 显示运营主体为 Example Limited, Australia"],
       "evidence_pages": ["https://www.example.com/privacy-policy"]
@@ -98,8 +83,8 @@
 
 - `A`：强证据确认。官网法律主体/注册号/注册地址/官方登记资料至少一项强匹配。
 - `B`：较高可信。至少一个强证据或多个中等证据，无强冲突。
-- `C`：仅部分相关。品牌/目录相关但法人归属不完整。放入 `rejected_candidates`。
-- `D`：弱相关或存疑。必须拒绝。
+- `C`：仅部分相关。品牌/目录相关但法人归属不完整。
+- `D`：弱相关或存疑。死链、占位页、B2B商铺页、同名异国公司、主体冲突。
 
 ## relationship_to_target 取值
 
