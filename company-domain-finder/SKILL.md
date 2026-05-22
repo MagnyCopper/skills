@@ -11,6 +11,14 @@ description: "Use when discovering or verifying a company's official website dom
 
 ---
 
+## ⚠️ 最高优先级：文件保存规则（绝对约束）
+
+**你必须完成以下两件事，缺一不可：**
+
+1. **先创建目录**：根据传入的 `wdcode` 参数，执行 `mkdir -p temp/aidomain/<wdcode>/` 创建目录。
+2. **必须写文件**：搜索完成后，必须将结果 JSON 保存到 `temp/aidomain/<wdcode>/domain.json` 文件中，绝不能使用默认路径，也不能只在对话中输出。
+
+必须阅读并严格遵守同目录下的 `prompt.md` 中定义的技术契约（输入参数、JSON 输出 Schema 以及置信度 A-D 评级标准）。
 
 ## 强制规则：法人主体归属验证
 
@@ -51,7 +59,7 @@ description: "Use when discovering or verifying a company's official website dom
 5. **关系分类**（为每个候选 URL 标注 `relationship_to_target`）：
    `same_entity`、`local_entity_operated_site`、`foreign_parent_or_group_site`、`subsidiary_or_affiliate_site`、`branch_or_representative_office`、`same_name_different_jurisdiction`、`brand_or_product_site`、`directory_only_unverified`、`unknown`。
 
-6. **写入结果文件**：按用户 prompt 指定的路径写入 JSON 文件，写入后确认文件已存在。
+6. **写入结果文件**：将包含 `domains` 的 JSON 数据写入到 `temp/aidomain/<wdcode>/domain.json`，写入后确认文件已存在。
 
 
 ## 全球企业特别规则
