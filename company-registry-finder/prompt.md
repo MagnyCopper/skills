@@ -180,6 +180,8 @@
 10. **冲突必须记录**：任何冲突或被否决的备选写入 `verification.contradictions`，尽量带来源 URL。
 11. **以 `output-template.json` 为骨架**：字段名与类型逐一对齐，不增不减。
 12. **低于 C 必须重试**：用改写查询重试 DISCOVER，最多 2 次。
+13. **清算不等于解散**：如果输入名与注册系统中的实体精确匹配，即使该实体处于 liquidation（清算）状态，也必须返回该实体本身（`entity_status` 标为 `active` 或 `dissolved` 视实际状态而定）。只有在实体被**正式注销/解散（formally dissolved/deregistered）**且有 `successor_entity` 时才走后继链。清算中的实体仍是合法存续的注册主体。
+14. **官方登记系统搜索失败时回退**：当官方登记系统在 2 次尝试后仍无结果，必须使用 OpenCorporates API (`api.opencorporates.com/v0.4/companies/search?q=<name>&jurisdiction_code=<code>`) 或 GLEIF LEI 数据库 (`search.gleif.org`) 作为注册号验证的回退源。在 `evidence_sources` 中标注 `kind` 为 `third_party` 或 `regulatory_filing`（GLEIF LEI 属监管文件级别）。
 
 ---
 

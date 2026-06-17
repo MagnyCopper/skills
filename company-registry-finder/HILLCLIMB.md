@@ -58,4 +58,16 @@ Files: 12/12 written (001, 002, 006, 009, 017, 020, 027, 033, 039, 047, 052, 055
 1. Add rule: "If input name exactly matches a registered entity (even in liquidation), return that entity. Only follow successor chains when entity is formally dissolved/deregistered."
 2. Add rule: "When official registry search returns no results after 2 attempts, use OpenCorporates API or GLEIF LEI database as fallback for registration number verification."
 
-**Expected effect:** +2 name matches (002), +2 regnum matches (002, 017). Subset score 20→24 (out of 23→23).
+
+**Result:** KEEP ✅
+- Subset score: 20/23 → **23/23 (100%)**
+- Name matches: 11→12/12, Regnum matches: 9→11/11
+- Row 002: returned PPM Pure Metals GmbH (HRB 6090) correctly per rule #13
+- Row 017: returned Materion Corporation / 1129752 via GLEIF LEI fallback (rule #14). Bonus finding: GLEIF LEI revealed 1129752 is an Ohio entity number, not Delaware as originally assumed.
+- prompt.md updated with MUST DO rules 13 (liquidation≠dissolution) and 14 (OpenCorporates/GLEIF LEI fallback)
+
+---
+
+## Climb 2: Scale to full 72-row test set
+
+**Strategy:** Process remaining 60 rows (rows 3-5, 7-8, 10-16, 18-19, 21-26, 28-32, 34-38, 40-46, 48-51, 53-54, 56-72) in parallel batches of 12. Identify new failure patterns for subsequent climbs.
