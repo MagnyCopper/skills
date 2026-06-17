@@ -1,0 +1,43 @@
+{
+  "id": "",
+  "input": {
+    "raw_name": "",
+    "country_hint": null,
+    "industry_hint": null,
+    "parsed_hints": {
+      "detected_country": null,
+      "detected_script": null,
+      "detected_language_hints": []
+    }
+  },
+  "result": {
+    "standard_name": "",
+    "registered_jurisdiction": "",
+    "registered_address": "",
+    "registration_number": "",
+    "registration_number_type": "",
+    "entity_status": "",
+    "former_names": [],
+    "successor_entity": null
+  },
+  "verification": {
+    "confidence_level": "",
+    "relationship_to_target": "",
+    "name_match_evidence": "",
+    "regnum_match_evidence": "",
+    "address_match_evidence": "",
+    "contradictions": []
+  },
+  "evidence_sources": [
+    {
+      "url": "",
+      "locator": "",
+      "snippet": "",
+      "kind": "",
+      "accessed_at": ""
+    }
+  ],
+  "search_methods": [],
+  "search_queries_used": [],
+  "timestamp": ""
+}

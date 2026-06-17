@@ -1,0 +1,72 @@
+Dowa Holdings（同和控股）	中國同和控股集團有限公司	2246023
+PPM Pure Metals GmbH（德国）	PPM Pure Metals GmbH	Stendal HRB 6090
+Indium Corporation（美国铟公司）	THE INDIUM CORPORATION OF AMERICA	46622
+5N Plus Inc.（加拿大）	5N PLUS INC.	1060690-1
+Pavlodar Alumina Plant（哈萨克斯坦 ）	Pavlodar Alumina Plant	
+Dowa Electronics Materials Co., Ltd. (日本)	DOWAエレクトロニクス株式会社	4010001099184
+Rasa Industries, Ltd. (日本)	ラサ工業株式会社	8010001034971
+Neo Performance Materials Inc. (加拿大)	CITIC ENVIROTECH LTD	
+Recylex S.A. (法国)	Recylex SA	54209770400317
+ALB Materials Inc (美国)	ALB MATERIALS INC	E0589082014-8
+AXT, Inc. (美国)	AXT, INC.	2817630
+Yamanaka Advanced Materials Co., Ltd. (日本)	ヤマナカアドバンスマテリアル株式会社	5130001007506
+Novel Crystal Technology, Inc. (NCT，日本)	株式会社ノベルクリスタルテクノロジー	5030001109246
+FLOSFIA Inc. (日本)	株式会社FLOSFIA	5130001046925
+Kyma Technologies (美国)	KYMA TECHNOLOGIES, INC.	0461726
+Tamura Corporation (田村制作所，日本)	株式会社タムラ製作所	3011601004237
+Materion Corporation (美国)	Materion Corporation	1129752
+AGC Inc. (日本)	AGC株式会社	2010001008650
+ALB Materials Inc (美国)	ALB MATERIALS INC	E0589082014-8
+Alfa Aesar (美国)	THERMO FISHER SCIENTIFIC CHEMICALS INC.	232543453
+Sigma Aldrich (美国)	SIGMA-ALDRICH CORPORATION	3732137
+Kisan Kinzoku Chemicals (日本)	稀産金属株式会社	6120001049457
+Kojundo Chemical Laboratory (日本)	株式会社高純度化学研究所	9030001068752
+Rasa Industries, Ltd. (日本)	ラサ工業株式会社	8010001034971
+住友电气工业株式会社 (Sumitomo Electric、日本)	住友電気工業株式会社	5120001077450
+Wolfspeed, Inc.（美国）	Wolfspeed, Inc.	0801181025
+英飞凌科技股份公司 (Infineon、德国)	Infineon Technologies AG	München HRB 126492
+Navitas Semiconductor	Navitas Semiconductor Corporation	3432932
+三菱化学集团 (Mitsubishi Chemical)	三菱ケミカルグループ株式会社	8010401059206
+圣戈班 (Soitec)	SOITEC SA	38471190900034
+NTT先进技术公司 (NTT Advanced Technology, NTT-AT)	NTTアドバンステクノロジ株式会社	9011101028202
+IQE plc	IQE PLC	03745726
+德州仪器公司 (Texas Instruments)	TEXAS INSTRUMENTS INCORPORATED	368223
+瑞萨电子株式会社 (Renesas Electronics)	ルネサスエレクトロニクス株式会社	8020001075701
+Efficient Power Conversion Corporation (EPC)	EFFICIENT POWER CONVERSION CORPORATION	3052660
+Power Integrations, Inc.	POWER INTEGRATIONS, INC.	2781778
+安森美半导体 (onsemi)	ON SEMICONDUCTOR CORPORATION	3248880
+意法半导体 (STMicroelectronics)	STMicroelectronics N.V.	33194537
+Nexperia B.V. (闻泰科技子公司)	Nexperia B.V.	66264111
+Coherent Corp. 	Coherent Corp.	365492
+罗姆半导体集团 (ROHM Semiconductor)	ローム株式会社	9130001000052
+日本碍子株式会社 (NGK Insulators)	NGK株式会社	3180001010829
+SweGaN AB	SweGaN AB	556965-1937
+IQE plc	IQE PLC	03745726
+AXT, Inc.	AXT, INC.	2817630
+Wafer Technology Ltd	 WAFER TECHNOLOGY LIMITED	
+住友电气工业株式会社 (Sumitomo Electric)	住友電気工業株式会社	
+Sigma Aldrich (默克集团)	SIGMA-ALDRICH, INC.	
+Beantown Chemical	BEANTOWN CHEMICAL CORPORATION	714720
+ALB Materials Inc	ALB MATERIALS INC	E0589082014-8
+Kojundo Chemical Lab	株式会社高純度化学研究所	9030001068752
+Hitachi Metals, Ltd.	株式会社プロテリアル	3010401038783
+Jaytee Alloys & Components Limited	JAYTEE ALLOYS & COMPONENTS PRIVATE LIMITED	U24203UP2024PTC202623
+Liquid Wire Inc.	LIQUID WIRE INC.	122003890
+Umicore	UMICORE	0401.574.852
+RotoMetals	ROTOMETALS, INC	3108991
+Geratherm Medical AG	Geratherm Medical AG	Jena HRB 111272
+Galvotec Alloys, Inc.	GALVOTEC ALLOYS, INC.	34601186F
+Novel Crystal Technology, Inc. 	株式会社ノベルクリスタルテクノロジー	5030001109246
+FLOSFIA Inc.	株式会社FLOSFIA	5130001046925
+Sigetronics	시지트로닉스	210111-0058935
+三菱电机株式会社	三菱電機株式会社	4010001008772
+FLOSFIA Inc.	株式会社FLOSFIA	5130001046925
+Kyma Technologies, Inc.	Kyma Technologies, Inc.	0585514
+Atecom Technology Co., Ltd.	艾德康科技有限公司	16753878
+FLOSFIA Inc.	株式会社FLOSFIA	5130001046925
+FLOSFIA Inc.	株式会社FLOSFIA	5130001046925
+Sigetronics	시지트로닉스	210111-0058935
+FLOSFIA Inc.	株式会社FLOSFIA	5130001046925
+Hamamatsu Photonics K.K.	浜松ホトニクス株式会社	2080401004193
+Agnitron Technology, Inc.	Agnitron Technology Inc.	2901322-3
+Photek	PHOTEK LIMITED	02641768
