@@ -40,14 +40,17 @@ description: "Use when discovering or verifying a company's official website dom
 
 1. **创建输出目录**：按用户 prompt 中指定的路径，先执行 `mkdir -p` 创建目录。
 
-2. **搜索候选域名**
+2. **搜索候选域名与筛选限制**
    - 使用精确公司名搜索：`"company_name" official website`、`"company_name" domain`。
    - 加入目标国家/地区：`"company_name" "country" website`。
    - 按国家/地区加入本地注册号关键词（Singapore UEN/ACRA，Australia ABN/ACN，UK Companies House，India CIN/GSTIN，France SIREN/SIRET 等）。
    - 检查权威来源：官方工商系统、证券交易所公告、年报、LEI、LinkedIn、Bloomberg、Wikipedia、当地商业目录。
+   - **数量硬约束：最多只能选择排名前 3 个候选域名进行深度核验，对于其他靠后的域名一概忽略，严禁核验超过 3 个域名。**
 
-3. **抓取并核验网站内容**
-   - 优先查看首页、About/About Us、Contact、Legal notice、Terms、Privacy Policy、Imprint、Footer、Investor Relations。
+3. **网页抓取工具决策链（网络性能优化核心）**
+   - **轻量级 HTTP 优先**：你必须**优先调用最轻量、最快速**的 `read_url_content` 工具来抓取目标页面（如首页、About页）。**禁止无故直接调用 Playwright 浏览器工具（如 `browser_navigate` 等）**。
+   - **Playwright 降级兜底**：只有在 `read_url_content` 请求失败（如遭遇 403, 401, 503 等反爬防护拦截），或者抓取到的页面内容为空、缺少关键文本时，才允许降级使用 Playwright 浏览器工具进行页面访问与渲染。
+   - 抓取顺序：优先查看首页、About/About Us、Contact、Legal notice、Terms、Privacy Policy、Imprint、Footer、Investor Relations。
    - 提取法人名称、国家/地区、注册号、注册地址、办公地址、邮箱域名、版权归属、母子公司关系描述。
 
 4. **执行法人主体归属验证**
