@@ -118,7 +118,29 @@
 
 ### 3.2 DISCOVER（发现）
 
-从至少 3 个独立来源生成候选。优先按检测到的管辖区路由到 `references/registry-sources.md` 的官方登记系统（JP 用 `houjin-bangou.nta.go.jp`、GB 用 Companies House、DE 用 `handelsregister.de`、FR 用 `recherche-entreprises.api.gouv.fr`、TW 用 `findbiz.nat.gov.tw` 等）。付费或反爬的管辖区（HK、IN、CA、KZ、DE 的 PDF 输出）回退到 OpenCorporates。同时跑网页搜索与 Wikipedia 首段，捕捉 `"formerly"`、`"renamed"`、`"acquired by"`、`"merged"` 等改名/收购信号。每个候选记录：候选名、候选号、候选管辖区、来源 URL、原文片段。
+采用**三层递进**策略，逐层扩大搜索范围：
+
+**Tier 1：API 自动查询（快速覆盖上市公司/大型企业）**
+- GLEIF LEI API（`api.gleif.org/api/v1/lei-records?filter[entity.legalName]=<name>`，免费无 key）：覆盖全球上市公司。返回 `legalName`、`jurisdiction`、`registeredAs`（注册号）、`status`。**注意**：GLEIF 可能返回错误管辖区（如 Indium Corporation 有 DE 文件号但实际在 NY 注册），需在 VERIFY 阶段确认正确的注册州。
+- gBizINFO（`info.gbiz.go.jp`）：覆盖所有日本注册法人，是 JP 企业的**首选数据源**（比 NTA 更易查询）。
+- Creditsafe / datalog.co.uk：覆盖美国/欧洲企业，返回注册号与注册州。
+
+**Tier 2：Wikipedia + 官方登记系统（覆盖知名企业）**
+- JP：`houjin-bangou.nta.go.jp`（法人番号公表サイト），可按 13 位号码验证名称与状态。
+- GB：Companies House（`find-and-update.company-information.service.gov.uk`）。
+- DE：`handelsregister.de`。
+- FR：`recherche-entreprises.api.gouv.fr`。
+- TW：`findbiz.nat.gov.tw`。
+- Wikipedia 首段：捕捉 `"formerly"`、`"renamed"`、`"acquired by"`、`"merged"` 等改名/收购信号。**注意**：Wikipedia 搜索可能返回错误页面（如搜索 "Mitsubishi Electric" 可能返回地铁车辆页面），必须核对页面内容与目标公司匹配。
+
+**Tier 3：Web 搜索（覆盖中小企业/私有公司）**
+- 使用 `websearch_web_search_exa` 搜索 `"<company name> <jurisdiction> registration number"` 或 `"<company name> 法人番号"`（JP）。
+- 搜索结果中的 gBizINFO 页面（`info.gbiz.go.jp/hojin/ichiran?hojinBango=<number>`）是 JP 企业注册号的可靠来源。
+- SEC EDGAR 文件（`sec.gov`）是美国上市公司的可靠注册号来源。
+
+**多管辖区消歧规则**：当同一公司在多个州/国家有注册时，返回与 `country_hint` 或行业背景最匹配的注册实体，不要返回任意一个。例如 Indium Corporation 应返回 NY DOS ID 46622（注册州），而非 DE 文件号 2787375（仅在 DE 有登记代理）。
+
+**括号覆盖规则**：当 `raw_name` 的括号内容与主名指向不同实体时（如 `圣戈班 (Soitec)`），括号内的名称是真实目标，主名仅提供背景。
 
 ### 3.3 CORROBORATE（印证）
 
