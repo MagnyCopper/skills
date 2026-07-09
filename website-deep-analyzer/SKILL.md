@@ -1,9 +1,9 @@
 ---
-name: website-deep-analyzer-enhanced
+name: website-deep-analyzer
 description: 用于通过 Playwright 或等效浏览器方式抓取企业官网，并按照当前 prompt schema 提取企业主体信息、补全缺失字段、抓取分支机构、保存原始页面与结果文件的技能。
 ---
 
-# 技能说明：website-deep-analyzer-enhanced
+# 技能说明：website-deep-analyzer
 
 当用户要求你分析某个企业官网时，必须先读取同目录下的 `prompt.md`，然后严格按照其中定义的最新 JSON structure 输出结果。
 
