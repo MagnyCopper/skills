@@ -4,21 +4,56 @@
 This repository is organized around **skills**, each stored as a top-level directory.
 
 - `README.md`: repository overview.
+
+### Data Discovery & Verification
+
+- `company-domain-finder/`: find a company's official website domain given its name and country/region.
+  - `company-domain-finder/SKILL.md`: skill definition with 4-stage pipeline (DISCOVER → CORROBORATE → VERIFY → SCORE).
+  - `company-domain-finder/prompt.md`: technical contract with input/output schema.
+  - `company-domain-finder/assets/templates/output-template.json`: fixed JSON output template.
+  - `company-domain-finder/references/search-strategies/`: country-specific search query templates organized by region.
+  - `company-domain-finder/references/country-registries.md`: official company registries by country for cross-validation.
+
+- `company-registry-finder/`: find a company's official registered legal name, jurisdiction/address, and registration number.
+  - `company-registry-finder/SKILL.md`: canonical skill definition and workflow.
+  - `company-registry-finder/prompt.md`: complete technical contract with input/output schema and evaluation rules.
+  - `company-registry-finder/DESIGN.md`: design documentation.
+  - `company-registry-finder/PLAN.md`: implementation plan.
+  - `company-registry-finder/HILLCLIMB.md`: optimization hill-climbing log.
+  - `company-registry-finder/references/`: supporting reference material (registry sources, number formats, disambiguation rules, name normalization).
+  - `company-registry-finder/tests/`: evaluation test sets and scripts.
+
+- `overseas-registry-source-research/`: research official data sources from a country/region/sector.
+  - `overseas-registry-source-research/SKILL.md`: skill definition and workflow.
+  - `overseas-registry-source-research/assets/templates/registry-research-template.md`: fixed output template.
+
+### Information Extraction & Analysis
+
 - `homepage-info-extractor/`: extract specified fields from company official homepages.
   - `homepage-info-extractor/SKILL.md`: canonical skill definition and workflow.
   - `homepage-info-extractor/assets/templates/template-table.md`: fixed output template for homepage extraction tasks.
   - `homepage-info-extractor/references/`: supporting reference material.
-- `company-domain-finder/`: find a company's official website domain given its name and country/region.
-  - `company-domain-finder/SKILL.md`: skill definition with 4-stage pipeline (DISCOVER → CORROBORATE → VERIFY → SCORE).
-  - `company-domain-finder/assets/templates/output-template.json`: fixed JSON output template.
-  - `company-domain-finder/references/search-strategies/`: country-specific search query templates organized by region.
-  - `company-domain-finder/references/country-registries.md`: official company registries by country for cross-validation.
-- `overseas-registry-source-research/`: research official data sources from a country/region/sector.
+
+- `website-deep-analyzer/`: deep crawl and extract structured company information from official websites using Playwright.
+  - `website-deep-analyzer/SKILL.md`: skill definition and workflow.
+  - `website-deep-analyzer/prompt.md`: JSON schema definition and extraction rules.
+
+### Recruitment & Assessment
+
+- `resume-screener/`: intelligent resume screening and candidate evaluation.
+  - `resume-screener/SKILL.md`: skill definition and workflow.
+  - `resume-screener/references/university-tiers.md`: university tier hierarchy (C9/985/211).
+  - `resume-screener/references/screening-dimensions.md`: evaluation dimensions and scoring criteria.
+  - `resume-screener/references/job-requirements.md`: predefined job requirements by position.
+  - `resume-screener/assets/report-template.md`: Markdown report output template.
+
 - `results/`: generated outputs. Store files under `results/<YYYYMMDD>/<skill-name>/` (create directories if missing).
 
 Example output paths:
 - `results/20260202/homepage-info-extractor/example.com.md`
 - `results/20260417/company-domain-finder/1608750612.json`
+- `results/20260617/company-registry-finder/001.json`
+- `temp/aiparse/www_example_com/result.json` (website-deep-analyzer)
 
 ## Build, Test, and Development Commands
 No build system or automated test runner is configured.
