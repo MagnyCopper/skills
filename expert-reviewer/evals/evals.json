@@ -1,0 +1,41 @@
+{
+  "skill_name": "expert-reviewer",
+  "description": "对一份文档（技术/架构设计、业务/产品方案、报告/论文）执行结构化专家评审，同时给出红队挑刺视角与建设性改进建议。",
+  "evals": [
+    {
+      "id": 1,
+      "name": "technical-architecture-design-review",
+      "prompt": "帮我评审一下这份设计文档。我设计了一个微服务订单系统，架构大概是这样：前端 React + 后端 Spring Cloud（Gateway + Nacos + OpenFeign）+ 数据库 MySQL（订单服务一个库、用户服务一个库、商品服务一个库）+ 消息队列 Kafka + 缓存 Redis。订单流程是：用户下单 → 订单服务创建订单（status=PENDING）→ 调用户服务扣减余额 → 调商品服务扣库存 → 更新订单状态为 SUCCESS，如果中间失败就回滚。设计目标是支撑双 11 大促。请帮我找找这个方案的问题，越严越好。",
+      "expected_output": "评审报告应识别出多个 Critical/High 问题：(1) 跨库事务用 Saga 还是 2PC 没说；(2) 双 11 容量规划缺失；(3) Kafka 在订单流程中的角色不清；(4) Redis 缓存策略/失效策略缺失；(5) 失败回滚的边界没定义；(6) 服务发现/熔断/降级策略缺失；(7) 监控/可观测性没提；(8) 数据一致性保证机制不明。每个问题应有原文引用、方法论依据、严重等级、红队视角、建设性视角。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "business-plan-review-with-investor-lens",
+      "prompt": "下面是我准备发给红杉的商业计划，请帮我审一下。\n\n公司：AIResume Inc.\n目的：用 AI 帮求职者优化简历\n问题：求职者写简历难、不知道怎么写才能过 ATS（Applicant Tracking System）\n解决方案：用户上传旧简历 + 目标岗位 JD，AI 生成定制化简历，自动匹配 ATS 关键词\n市场规模：全球求职市场巨大，每年有数亿求职者\n商业模式：SaaS 订阅，$19/月\n团队：我（CEO，前字节产品经理）+ 联创（CTO，前阿里工程师）\n融资：seeking $2M seed round at $10M cap\n我们预计 12 个月内达到 10 万付费用户，年化收入 $20M。",
+      "expected_output": "评审报告应识别出多个 Critical/High 问题：(1) Why Now 缺失（为什么现在做？AI 简历工具 5 年前就有）；(2) Competition 缺失（ResumeWorded、Jobscan、Teal 等已存在，未分析差异化）；(3) 市场规模过度乐观（数亿求职者 ≠ 数亿付费用户，TAM/SAM/SOM 未拆解）；(4) 12 个月 10 万付费用户的预测缺乏 reference class（同类 SaaS 的实际增长分布）；(5) $20M ARR 的单位经济未拆解（CAC、LTV、Churn）；(6) PMF 主张无依据（用户访谈/原型测试？）；(7) AI 模型合规风险（OpenAI 条款、隐私）；(8) ATS 厂商可能反向锁定。每个问题应有原文引用、方法论依据、严重等级、红队视角、建设性视角。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "research-paper-review-statistical-rigor",
+      "prompt": "我写了篇论文想投会议，但是担心方法学有问题。论文标题是《冥想 App 对程序员工作效率的因果影响：一项随机对照实验》。摘要：我们招募了 100 名程序员，随机分两组，实验组用我们的冥想 App 8 周，对照组不用。8 周后用自评问卷测'感知到的生产力'。结果：实验组得分比对照组高 15%（p=0.04），说明冥想 App 因果性地提升了程序员工作效率。结论：企业应该为员工提供冥想 App 订阅。我主要担心统计方法。",
+      "expected_output": "评审报告应识别出多个 Critical/High 问题：(1) 因果声明过强（自评问卷 ≠ 客观生产力，可能存在 placebo）；(2) 样本量 100 是否经过 power analysis？效应量边缘 + p=0.04 → 可能多重比较或幸存者偏差；(3) 无盲法（对照组知道自己不用 App，可能产生 resentful demoralization）；(4) 缺 pre-registration（结果事后选择 p=0.04 → 可能 HARKing）；(5) 缺开放数据/代码（复现性差）；(6) 自评问卷的心理测量学属性未报告；(7) 8 周随访期短，长期效应未知；(8) 推广到'企业应该'是从个体到组织政策的过度推广。每个问题应有原文引用、方法论依据（CASP RCT checklist / Cochrane RoB / Replication Crisis）、严重等级、红队视角、建设性视角。",
+      "files": []
+    },
+    {
+      "id": 4,
+      "name": "adhoc-idea-critique-no-document",
+      "prompt": "我有个 idea 想让你帮我挑挑刺：我们公司想做一个'AI HR 助手'，让员工可以用自然语言问 HR 问题（'我年假还有多少'、'怎么申请出差'、'产假政策是什么'）。卖点是不用员工翻 HR 系统、HR 团队减少 50% 重复咨询。我们打算用 GPT-4 + RAG + 公司内部 HR 文档。预算是 3 个工程师 6 个月做出 MVP。你觉得这个想法靠谱吗？",
+      "expected_output": "评审报告应识别出多个 High 问题（口述场景，无文档引用时引用用户原话）：(1) 'HR 团队减少 50% 重复咨询' 的依据是什么？是否做了 HR 团队工作量 baseline？(2) GPT-4 + RAG 对 HR 文档的理解准确率？错误答案的代价？（如'产假政策'答错可能触犯劳动法）(3) 数据隐私（HR 文档含员工敏感信息，喂给 GPT 是否合规？OpenAI 数据使用条款？）(4) 3 工程师 6 个月 MVP 缺 reference class（同类 RAG 系统的实际开发周期）(5) 用户为什么不直接搜 HR 系统？真正痛点是 UX 还是信息查找？(6) 减少重复咨询后 HR 转型做什么？（机会成本）(7) 失败退化路径（如果 AI 答错，怎么补救）(8) 部署后的 fallback 方案（AI 宕机时员工怎么办）。每个问题应有用户原话引用、方法论依据、严重等级、红队视角、建设性视角。",
+      "files": []
+    },
+    {
+      "id": 5,
+      "name": "english-serverless-architecture-review",
+      "prompt": "Please review our architecture for a real-time notification system.\n\nWe're building this on AWS: mobile clients call API Gateway → a Lambda function writes the notification to DynamoDB → DynamoDB Streams triggers another Lambda → that Lambda publishes to SNS → SNS fans out to 3 SQS queues (one per channel: push, email, SMS) → each queue has a dedicated Lambda consumer that calls the downstream service (FCM for push, SES for email, SNS for SMS).\n\nWe expect about 10 million notifications per day at peak. Team is 2 engineers, we have 3 months to get to production. We chose serverless because we don't want to manage servers. We're not sure if we need any monitoring beyond CloudWatch default dashboards.\n\nPlease find as many issues as possible with this design.",
+      "expected_output": "Review report should identify multiple Critical/High issues: (1) No DLQ (dead letter queue) for failed notifications — messages that fail to process are lost; (2) No idempotency — DynamoDB Streams can deliver duplicates, causing duplicate push/email/SMS; (3) Lambda cold start latency for real-time notifications; (4) No cost analysis — 10M notifications/day through Lambda+SNS+SQS+downstream APIs could be very expensive; (5) No monitoring/observability beyond default CloudWatch; (6) No disaster recovery or multi-region; (7) DynamoDB Streams eventual consistency may cause ordering issues; (8) Standard SQS does not guarantee message ordering (FIFO needed?); (9) No circuit breaker or retry strategy for downstream services (FCM/SES can fail); (10) No rate limiting or throttling on API Gateway. Each issue should include original text quote, methodology reference, severity rating, red team perspective, constructive perspective.",
+      "files": []
+    }
+  ]
+}
