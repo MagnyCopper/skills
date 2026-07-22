@@ -215,3 +215,6 @@ __marimo__/
 # Playwright MCP artifacts
 .playwright-mcp/
 .DS_Store
+
+# OpenCode agent session state
+.omo/
