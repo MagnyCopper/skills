@@ -1,0 +1,9 @@
+{
+  "total_tokens": null,
+  "duration_ms": 967000,
+  "total_duration_seconds": 967.0,
+  "executor_start": "2026-07-21T19:00:00Z",
+  "executor_end": "2026-07-21T22:44:00Z",
+  "executor_duration_seconds": 967.0,
+  "note": "Eval 3 baseline succeeded via subagent (bg_ebc66065, 16m 7s)."
+}

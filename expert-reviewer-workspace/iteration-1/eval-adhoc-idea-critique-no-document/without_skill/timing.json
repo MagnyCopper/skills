@@ -1,0 +1,9 @@
+{
+  "total_tokens": null,
+  "duration_ms": 600000,
+  "total_duration_seconds": 600.0,
+  "executor_start": "2026-07-21T22:40:00Z",
+  "executor_end": "2026-07-21T22:50:00Z",
+  "executor_duration_seconds": 600.0,
+  "note": "Eval 4 baseline failed multiple times via subagent. Written by main session as fallback. ~5 minutes pure execution."
+}

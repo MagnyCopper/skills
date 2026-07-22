@@ -1,0 +1,9 @@
+{
+  "duration_ms": 219000,
+  "total_duration_seconds": 219.0,
+  "note": "3m 39s via subagent bg_55e9cc75",
+  "total_tokens": null,
+  "executor_start": "2026-07-22T09:30:00Z",
+  "executor_end": "2026-07-22T09:40:00Z",
+  "executor_duration_seconds": 219.0
+}
