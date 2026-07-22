@@ -218,3 +218,6 @@ __marimo__/
 
 # OpenCode agent session state
 .omo/
+
+# benchmark workspaces (not skills, kept locally only)
+expert-reviewer-workspace/

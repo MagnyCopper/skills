@@ -1,9 +1,0 @@
-{
-  "total_tokens": null,
-  "duration_ms": 967000,
-  "total_duration_seconds": 967.0,
-  "executor_start": "2026-07-21T19:00:00Z",
-  "executor_end": "2026-07-21T22:50:00Z",
-  "executor_duration_seconds": 967.0,
-  "note": "Eval 3 with-skill runs failed multiple times via subagent (hung 49min+). This run was executed in main session as Claude.ai fallback per skill-creator. Includes the time of all failed subagent retries. Pure main-session execution time was approximately 10 minutes."
-}

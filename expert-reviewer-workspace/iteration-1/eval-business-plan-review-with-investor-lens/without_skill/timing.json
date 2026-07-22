@@ -1,9 +1,0 @@
-{
-  "total_tokens": null,
-  "duration_ms": 171000,
-  "total_duration_seconds": 171.0,
-  "executor_start": "2026-07-21T11:35:00Z",
-  "executor_end": "2026-07-21T11:37:51Z",
-  "executor_duration_seconds": 171.0,
-  "note": "Approximate — bg_7f179c04 reported Duration: 2m 51s."
-}
